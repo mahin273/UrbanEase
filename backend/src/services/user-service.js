@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 const userRepository = new UserRepository();
 
-exports.registerUser = async ({ firstname, lastname, username, nid_num, email, gender, password, dob, city, postal_code }) => {
+exports.registerUser = async ({ firstname, lastname, username, nid_num, email, password, }) => {
     // Check if the email is already in use
     const existingUser = await userRepository.findByEmail(email);
     if (existingUser) throw new Error('Email already in use');
@@ -18,11 +18,7 @@ exports.registerUser = async ({ firstname, lastname, username, nid_num, email, g
         username,
         nid_num,
         email,
-        gender,
-        dob,
         password_hash: passwordHash,
-        city,
-        postal_code,
     });
 
     return userId;

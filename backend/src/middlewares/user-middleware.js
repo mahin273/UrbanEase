@@ -1,6 +1,6 @@
 function validateUserInput(req, res, next) {
-    const {firstname, nid_num, username, email, password, dob } = req.body;
-    if (!firstname || !username || !nid_num || !email || !gender || !dob||!password) {
+    const {firstname, nid_num, username, email, password} = req.body;
+    if (!firstname || !username || !nid_num || !email || !password) {
         return res.status(400).json({ error: 'Missing required fields: username, email, password, dob' });
     }
     next();
