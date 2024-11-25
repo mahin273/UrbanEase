@@ -1,17 +1,39 @@
-const { UserRepository } = require('../repositories');
+const UserRepository = require('../repositories/user-repository');
+const bcrypt = require('bcrypt');
 
-const userRepo = new UserRepository();
+const userRepository = new UserRepository();
 
-async function createUser(data) {
-    try {
-        const user = await userRepo.create(data);
-        return user
-    } catch (error) {
-        console.log(error)
-    }
-}
+exports.registerUser = async ({ firstname, lastname, username, nid_num, email, gender, password, dob, city, postal_code }) => {
+    // Check if the email is already in use
+    const existingUser = await userRepository.findByEmail(email);
+    if (existingUser) throw new Error('Email already in use');
 
+    // Hash the password
+    const passwordHash = await bcrypt.hash(password, 10);
 
-module.exports = {
-    createUser
-}
+    // Create the new user
+    const userId = await userRepository.create({
+        firstname,
+        lastname,
+        username,
+        nid_num,
+        email,
+        gender,
+        dob,
+        password_hash: passwordHash,
+        city,
+        postal_code,
+    });
+
+    return userId;
+};
+
+exports.getAllUsers = async () => {
+    return await userRepository.findAll();
+};
+
+exports.deleteUserById = async (id) => {
+    const isDeleted = await userRepository.deleteById(id);
+    if (!isDeleted) throw new Error('User not found or could not be deleted');
+    return true;
+};

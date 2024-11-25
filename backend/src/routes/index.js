@@ -1,8 +1,8 @@
 const express = require('express');
-const v1Routes = require('./v1')
+const userRoutes = require('./v1/user-routes')
 
 const router = express.Router();
 
-router.use('/v1', v1Routes);
-
+// Use user routes for the '/users' path
+router.use('/users', userRoutes);
 module.exports = router;

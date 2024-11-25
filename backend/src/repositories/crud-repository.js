@@ -1,79 +1,66 @@
-const dbConnection = require('../config'); // Assuming you have a 'db.js' file for MySQL2 connection
+const pool = require('../config/db'); // MySQL connection pool
 
 class CrudRepository {
-    constructor(dbConnection, tableName) {
-        // Validate the passed connection object
-        if (!dbConnection || !dbConnection.execute) {
-            throw new Error('Invalid database connection passed to CrudRepository.');
-        }
-        this.connection = dbConnection; // MySQL2 connection object
-        this.tableName = tableName; // Name of the table
+    constructor(model) {
+        this.model = model;
     }
 
-    // CREATE method: Inserts a new record into the specified table
     async create(data) {
-        try {
-            const query = `INSERT INTO ${this.tableName} SET ?`;
-            const [result] = await this.connection.execute(query, [data]);
-            return result; // Returns the result of the query (inserted data)
-        } catch (error) {
-            throw new Error(`Error creating resource: ${error.message}`);
-        }
+        const columns = Object.keys(data).join(', ');
+        const placeholders = Object.keys(data).map(() => '?').join(', ');
+        const values = Object.values(data);
+
+        const query = `INSERT INTO ${this.model.tableName} (${columns}) VALUES (${placeholders})`;
+        const [result] = await pool.execute(query, values);
+        return result.insertId;
     }
 
-    // DESTROY method: Deletes a record by ID
-    async destroy(id) {
+    async findOneBy(column, value) {
+        const query = `SELECT * FROM ${this.model.tableName} WHERE ${column} = ? LIMIT 1`;
+        const [rows] = await pool.execute(query, [value]);
+        return rows[0];
+    }
+
+    async findAll() {
         try {
-            const query = `DELETE FROM ${this.tableName} WHERE id = ?`;
-            const [result] = await this.connection.execute(query, [id]);
-            if (result.affectedRows === 0) {
-                throw new Error(`Resource not found with id: ${id}`);
+            const query = `SELECT * FROM ${this.model.tableName}`;
+            const result = await pool.execute(query);
+
+            // Log the full result to check its structure
+            console.log('Query Result:', result);
+
+            // If result is undefined, log an error and return an empty array
+            if (!result || !Array.isArray(result[0])) {
+                console.error('Error: Query result is not an array:', result);
+                return [];  // Return an empty array in case of an error
             }
-            return result; // Returns the result of the delete operation
+
+            const rows = result[0];
+            console.log('Rows:', rows); // Log the rows to ensure they are correct
+            return rows;
         } catch (error) {
-            throw new Error(`Error deleting resource: ${error.message}`);
+            console.error('Error executing query:', error);
+            throw error; // Re-throw the error so it can be handled upstream
         }
     }
 
-    // GET method: Fetches a record by ID
-    async get(id) {
-        try {
-            const query = `SELECT * FROM ${this.tableName} WHERE id = ?`;
-            const [rows] = await this.connection.execute(query, [id]);
-            if (rows.length === 0) {
-                throw new Error(`Resource not found with id: ${id}`);
-            }
-            return rows[0]; // Returns the first row matching the ID
-        } catch (error) {
-            throw new Error(`Error fetching resource: ${error.message}`);
-        }
+  
+ 
+
+    async updateById(id, data) {
+        const updates = Object.keys(data).map((key) => `${key} = ?`).join(', ');
+        const values = [...Object.values(data), id];
+
+        const query = `UPDATE ${this.model.tableName} SET ${updates} WHERE ${this.model.primaryKey} = ?`;
+        const [result] = await pool.execute(query, values);
+        return result.affectedRows > 0;
     }
 
-    // GET ALL method: Fetches all records from the table
-    async getAll() {
-        try {
-            const query = `SELECT * FROM ${this.tableName}`;
-            const [rows] = await this.connection.execute(query);
-            return rows; // Returns all rows from the table
-        } catch (error) {
-            throw new Error(`Error fetching resources: ${error.message}`);
-        }
-    }
-
-    // UPDATE method: Updates a record by ID
-    async update(id, data) {
-        try {
-            const query = `UPDATE ${this.tableName} SET ? WHERE id = ?`;
-            const [result] = await this.connection.execute(query, [data, id]);
-            if (result.affectedRows === 0) {
-                throw new Error(`Resource not found with id: ${id}`);
-            }
-            return result; // Returns the result of the update operation
-        } catch (error) {
-            throw new Error(`Error updating resource: ${error.message}`);
-        }
+    async deleteById(id) {
+        const query = `DELETE FROM ${this.model.tableName} WHERE ${this.model.primaryKey} = ?`;
+        const [result] = await pool.execute(query, [id]);
+        return result.affectedRows > 0;
     }
 }
-
 
 module.exports = CrudRepository;
