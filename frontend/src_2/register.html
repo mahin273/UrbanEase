@@ -55,13 +55,6 @@
               <input type="email" name="email" placeholder="Email" class="border font-serif rounded-xl py-1 px-2 w-full"
                 required>
             </div>
-
-            <!-- Gender -->
-            <div class="mt-5">
-              <input type="text" name="gender" placeholder="Gender (Male, Female, Others)"
-                class="border font-serif rounded-xl py-1 px-2 w-full" required>
-            </div>
-
             <!-- Date of Birth (Birthday Calendar) -->
             <div class="mt-5">
               <input type="date" name="dob" class="border font-medium rounded-xl py-1 px-2 w-full" required>
@@ -108,55 +101,11 @@
     </div>
   </div>
 
-  <!-- JavaScript for Form Submission -->
-  <script>
-    document.getElementById('registerForm').addEventListener('submit', async (event) => {
-      event.preventDefault(); // Prevent default form submission
-
-      // Collect form data
-      const formData = new FormData(event.target);
-      const data = {
-        firstname: formData.get('firstname'),
-        lastname: formData.get('lastname'),
-        username: formData.get('username'),
-        nid_num: formData.get('nid_num'),
-        email: formData.get('email'),
-        gender: formData.get('gender'),
-        dob: formData.get('dob'),
-        password: formData.get('password'),
-        confirmPassword: formData.get('confirmPassword'),
-        // No need to collect role from the form
-      };
-
-      // Validate passwords match
-      if (data.password !== data.confirmPassword) {
-        alert('Passwords do not match!');
-        return;
-      }
-
-      try {
-        // Send data to the backend
-        const response = await fetch('http://localhost:4001/api/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-
-        if (response.ok) {
-          const result = await response.json();
-          alert('Registration successful! Welcome, ' + data.username + '!');
-          event.target.reset(); // Clear the form
-        } else {
-          const error = await response.json();
-          alert('Error: ' + error.error);
-        }
-      } catch (err) {
-        alert('Error connecting to the server. Please try again later.');
-      }
-    });
-  </script>
+  <!-- Link to the JavaScript file -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+<form id="registerForm"> </form>
+<script type="module" src="register.js"></script>
 </body>
 
 </html>
