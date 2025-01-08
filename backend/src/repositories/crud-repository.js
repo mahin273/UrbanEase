@@ -26,13 +26,13 @@ class CrudRepository {
             const query = `SELECT * FROM ${this.model.tableName}`;
             const result = await pool.execute(query);
 
-            // Log the full result to check its structure
+           
             console.log('Query Result:', result);
 
-            // If result is undefined, log an error and return an empty array
+            
             if (!result || !Array.isArray(result[0])) {
                 console.error('Error: Query result is not an array:', result);
-                return [];  // Return an empty array in case of an error
+                return [];  
             }
 
             const rows = result[0];

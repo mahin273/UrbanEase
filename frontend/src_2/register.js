@@ -1,5 +1,3 @@
-
-// Add interceptors for debugging purposes
 axios.interceptors.request.use((request) => {
     console.log('Starting Request:', request);
     return request;
@@ -14,9 +12,9 @@ const registerForm = document.getElementById('registerForm');
 
 registerForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    console.log('Form submitted'); // Debug: Check if the event listener is working
+    console.log('Form submitted'); 
 
-    // Use regular object assignment instead of FormData
+ 
     const data = {
         firstname: document.querySelector('[name="firstname"]').value,
         lastname: document.querySelector('[name="lastname"]').value,
@@ -28,7 +26,7 @@ registerForm.addEventListener('submit', async (event) => {
         confirmPassword: document.querySelector('[name="confirmPassword"]').value,
     };
 
-    console.log('Form data:', data); // Debug: Check if form data is captured
+    console.log('Form data:', data); 
 
     if (data.password !== data.confirmPassword) {
         alert('Passwords do not match!');
@@ -40,15 +38,15 @@ registerForm.addEventListener('submit', async (event) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-            }, // Ensure JSON content type
+            }, 
         });
 
-        console.log('Response:', response); // Debug: Check server response
+        console.log('Response:', response);
         alert('Registration successful! Welcome, ' + data.username + '!');
-        window.location.href = 'http://localhost:5174';
-        event.target.reset(); // Reset form on success
+        window.location.href = 'http://localhost:5173';
+        event.target.reset();
     } catch (error) {
-        console.error('Error:', error); // Debug: Log any errors
+        console.error('Error:', error); 
         if (error.response) {
             alert('Error: ' + (error.response.data.error || 'Something went wrong!'));
         } else {
