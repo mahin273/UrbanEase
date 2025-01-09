@@ -25,6 +25,11 @@ class ReportRepository extends CrudRepository {
     async findByStatus(status) {
         return await this.findManyBy('status', status);
     }
+    
+    async findById(reportId) {
+        return await this.findOneBy(this.model.primaryKey, reportId);
+    }
 }
+
 
 module.exports = ReportRepository;

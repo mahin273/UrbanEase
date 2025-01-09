@@ -52,6 +52,8 @@ class CrudRepository {
         const values = [...Object.values(data), id];
 
         const query = `UPDATE ${this.model.tableName} SET ${updates} WHERE ${this.model.primaryKey} = ?`;
+        console.log("Query:", query);
+        console.log("Values:", values);
         const [result] = await pool.execute(query, values);
         return result.affectedRows > 0;
     }

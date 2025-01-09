@@ -27,12 +27,11 @@ exports.getReportById = async (reportId) => {
     if (!report) throw new Error('Report not found');
     return report;
 };
-
 exports.updateReport = async (reportId, { title, description, category_id, location, google_maps_link, status, visibility }) => {
     const report = await reportRepository.findById(reportId);
     if (!report) throw new Error('Report not found');
 
-    const updatedReport = await reportRepository.update(reportId, {
+    const updatedReport = await reportRepository.updateById(reportId, {
         title,
         description,
         category_id,
@@ -42,8 +41,11 @@ exports.updateReport = async (reportId, { title, description, category_id, locat
         visibility,
     });
 
+    if (!updatedReport) throw new Error('Report could not be updated');
+
     return updatedReport;
 };
+
 
 exports.deleteReportById = async (reportId) => {
     const isDeleted = await reportRepository.deleteById(reportId);
