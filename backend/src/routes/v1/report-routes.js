@@ -6,8 +6,8 @@ const router = express.Router();
 
 // Define report routes
 router.post('/create', reportMiddleware.validateReportInput, reportController.createReport);
-router.get('/', reportController.getAllReports);
-router.get('/:id', reportController.getReportById);
+router.get('/', reportController.getAllReports); 
+router.get('/:id', reportController.getReportById); 
 // router.put('/:id', reportMiddleware.isAdmin, reportController.updateReport);
 router.put('/:id', reportController.updateReport);
 //router.delete('/:id', reportMiddleware.isAdmin, reportController.deleteReport);
