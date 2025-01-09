@@ -21,5 +21,12 @@ function validateReportInput(req, res, next) {
 
     next();
 }
+function isAdmin(req, res, next) {
+    const { user } = req;
+    if (user && user.role === 'admin') {
+        return next();
+    }
+    return res.status(403).json({ error: 'Unauthorized: Admin access required' });
+}
 
-module.exports = { validateReportInput };
+module.exports = { validateReportInput,isAdmin };

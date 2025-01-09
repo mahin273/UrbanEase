@@ -8,7 +8,10 @@ const router = express.Router();
 router.post('/create', reportMiddleware.validateReportInput, reportController.createReport);
 router.get('/', reportController.getAllReports);
 router.get('/:id', reportController.getReportById);
-// router.put('/:id', reportMiddleware.isAdmin, reportController.updateReport);
-// router.delete('/:id', reportMiddleware.isAdmin, reportController.deleteReport);
+router.put('/:id', reportMiddleware.isAdmin, reportController.updateReport);
+//router.delete('/:id', reportMiddleware.isAdmin, reportController.deleteReport);
+router.delete('/:id',reportController.deleteReport);
+
+
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const reportModel = {
     tableName: 'reports',
-    primaryKey: 'id',
+    primaryKey: 'report_id',
     columns: {
         id: 'INT AUTO_INCREMENT PRIMARY KEY',
         title: 'VARCHAR(255) NOT NULL',
