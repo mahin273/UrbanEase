@@ -6,7 +6,7 @@ const app = express();
 
 const corsOptions = {
     origin: 'http://localhost:5173', // Allow all origins for now (you can restrict to a specific URL like 'http://localhost:5173' later)
-    methods: ['GET', 'POST'], // Allow only GET and POST requests
+    methods: ['GET', 'POST','DELETE'], // Allow only GET and POST requests
     credentials: true, // Allow cookies and credentials to be sent
 };
 app.use(cors(corsOptions));

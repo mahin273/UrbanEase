@@ -27,3 +27,14 @@ exports.deleteUser = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+//login method
+exports.loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const { token, user } = await userService.login(email, password);
+        res.status(200).json({ message: 'Login successful', token, user });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};

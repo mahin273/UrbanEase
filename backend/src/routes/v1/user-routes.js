@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Define user routes
 router.post('/register', userMiddleware.validateUserInput, userController.registerUser);
+router.post('/login', userController.loginUser);
 router.get('/all', userController.getAllUsers);
 router.delete('/:id', userMiddleware.isAdmin, userController.deleteUser);
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const reportController = require('../../controllers/report-controller');
 const reportMiddleware = require('../../middlewares/report-middleware');
+const { isAuthenticated } = require('../../middlewares/auth-middleware');
 
 const router = express.Router();
 
@@ -12,7 +13,6 @@ router.get('/:id', reportController.getReportById);
 router.put('/:id', reportController.updateReport);
 //router.delete('/:id', reportMiddleware.isAdmin, reportController.deleteReport);
 router.delete('/:id',reportController.deleteReport);
-
 
 
 module.exports = router;
