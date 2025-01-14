@@ -38,3 +38,25 @@ exports.loginUser = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+// Forgot password controller
+exports.forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        await userService.forgotPassword(email); // Use userService here
+        res.status(200).json({ message: 'Password reset email sent successfully' });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+        await userService.resetPassword(token, newPassword);
+        res.status(200).json({ message: 'Password reset successfully' });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
