@@ -1,4 +1,4 @@
-const db = require('../config/db'); // Adjust to your database configuration
+const db = require('../config/db'); 
 
 class CommentRepository {
     // Add a comment to the database
@@ -19,7 +19,7 @@ class CommentRepository {
     async getCommentById(commentId) {
         const query = `SELECT * FROM report_comments WHERE id = ?`;
         const [result] = await db.query(query, [commentId]);
-        return result[0]; // Return the first result or undefined
+        return result[0]; 
     }
 
     // Update a comment
@@ -33,7 +33,7 @@ class CommentRepository {
     async deleteComment(commentId) {
         const query = `DELETE FROM report_comments WHERE id = ?`;
         const [result] = await db.query(query, [commentId]);
-        return result.affectedRows > 0; // Return true if a row was deleted
+        return result.affectedRows > 0; 
     }
 }
 

@@ -11,6 +11,8 @@ class CrudRepository {
         const values = Object.values(data);
 
         const query = `INSERT INTO ${this.model.tableName} (${columns}) VALUES (${placeholders})`;
+        console.log('Query:', query); // Log query to verify it's correct
+        console.log('Values:', values); // Log values being passed into query
         const [result] = await pool.execute(query, values);
         return result.insertId;
     }
@@ -36,11 +38,11 @@ class CrudRepository {
             }
 
             const rows = result[0];
-            console.log('Rows:', rows); // Log the rows to ensure they are correct
+            console.log('Rows:', rows); 
             return rows;
         } catch (error) {
             console.error('Error executing query:', error);
-            throw error; // Re-throw the error so it can be handled upstream
+            throw error; 
         }
     }
 

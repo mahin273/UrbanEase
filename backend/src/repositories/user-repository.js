@@ -1,6 +1,6 @@
 const CrudRepository = require('./crud-repository');
 const userModel = require('../models/user-model');
-const db = require('../config/db'); // Import db instance
+const db = require('../config/db'); 
 
 class UserRepository extends CrudRepository {
     constructor() {
@@ -27,7 +27,7 @@ class UserRepository extends CrudRepository {
         `;
         console.log('Executing query:', query);
         console.log('With parameters:', [token, expires, email]);
-        const [result] = await db.query(query, [token, expires, email]); // Use db directly
+        const [result] = await db.query(query, [token, expires, email]); 
         return result;
     }
 
@@ -36,8 +36,8 @@ class UserRepository extends CrudRepository {
             SELECT * FROM ${this.model.tableName}
             WHERE password_reset_token = ? AND password_reset_expires > NOW()
         `;
-        const [result] = await db.query(query, [token]); // Use db directly
-        return result[0]; // Assuming `result` is an array
+        const [result] = await db.query(query, [token]); 
+        return result[0]; 
     }
 
     async updatePassword(userId, hashedPassword) {
@@ -46,7 +46,7 @@ class UserRepository extends CrudRepository {
             SET password_hash = ?, password_reset_token = NULL, password_reset_expires = NULL
             WHERE user_id = ?
         `;
-        await db.query(query, [hashedPassword, userId]); // Use db directly
+        await db.query(query, [hashedPassword, userId]); 
     }
 }
 
