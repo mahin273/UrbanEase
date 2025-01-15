@@ -4,7 +4,7 @@ const staffService = require('../services/staff-service'); // Assuming your staf
 exports.createStaff = async (req, res) => {
     const { first_name, last_name, nid_num, email, role } = req.body;
     try {
-        console.log({ first_name, last_name, nid_num, email, role });
+        
         const staff = await staffService.createStaff({ first_name, last_name, nid_num, email, role }); // Pass as an object
         res.status(201).json({ message: 'Staff member created successfully', staff });
     } catch (error) {
