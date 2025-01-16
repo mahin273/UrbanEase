@@ -1,5 +1,6 @@
 const TaskRepository = require('../repositories/task-repository');
 const taskRepository = new TaskRepository();
+const actionMiddleware = require('../middlewares/action-middleware')
 
 // Add a task to a report
 exports.addTask = async (taskData) => {
@@ -9,8 +10,18 @@ exports.addTask = async (taskData) => {
     }
 
     const task_id = await taskRepository.addTask(taskData);
+
+    // Log task creation action
+    await actionMiddleware.logTaskAction(
+        task_id,
+        staff_id,
+        'Task created',
+        'Pending'
+    );
+
     return task_id;
 };
+
 
 
 // Get all tasks assigned to a specific staff
@@ -62,14 +73,23 @@ exports.getTasksByStatus = async (status) => {
 };
 
 // Update task status
-exports.updateTaskStatus = async (taskId, status) => {
-    if (!taskId || !status) {
-        throw new Error('Task ID and Status are required');
+exports.updateTaskStatus = async (taskId, status, staffId) => {
+    if (!taskId || !status || !staffId) {
+        throw new Error('Task ID, Status, and Staff ID are required');
     }
 
     const updatedTask = await taskRepository.updateStatus(taskId, status);
+
+    // Log status update action
+    await actionMiddleware.logTaskAction(
+        taskId,
+        staffId,
+        `Task status updated to ${status}`,
+        status
+    );
+
     return updatedTask;
-};
+}
 
 // Get tasks near deadline (within a specified number of hours)
 exports.getTasksNearDeadline = async (hours) => {
