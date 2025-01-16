@@ -1,5 +1,6 @@
 const staffService = require('../services/staff-service'); // Assuming your staff service is located here
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 // Create a new staff member (Admin-only)
 exports.createStaff = async (req, res) => {
     const { first_name, last_name, nid_num, email, role } = req.body;
@@ -9,6 +10,27 @@ exports.createStaff = async (req, res) => {
         res.status(201).json({ message: 'Staff member created successfully', staff });
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+};
+
+//login staff
+exports.loginStaff = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    try {
+        const staff = await staffService.loginStaff(email, password);  // Passing email correctly
+        if (!staff) {
+            return res.status(404).json({ error: "Staff not found" });
+        }
+
+        // Your logic for password verification and JWT token generation
+        res.status(200).json({ message: 'Login successful', staff });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
 

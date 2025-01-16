@@ -1,5 +1,6 @@
 const CrudRepository = require('./crud-repository');
 const staffModel = require('../models/staff-model');
+const db = require('../config/db'); 
 
 class StaffRepository extends CrudRepository {
     constructor() {
@@ -17,7 +18,9 @@ class StaffRepository extends CrudRepository {
 
     // Find staff by email
     async findByEmail(email) {
-        return await this.findOneBy('email', email);
+        const query = `SELECT * FROM staff WHERE email = ?`;
+        const [result] = await db.query(query, [email]);
+        return result[0];
     }
 
     // Get all staff members (can be customized further if needed)
@@ -30,6 +33,9 @@ class StaffRepository extends CrudRepository {
     async findById(staffId) {
         return await this.findOneBy(this.model.primaryKey, staffId);
     }
+
+ 
+
 }
 
 module.exports = StaffRepository;

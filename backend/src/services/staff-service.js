@@ -42,6 +42,12 @@ exports.getStaffById = async (staffId) => {
     return staffMember;
 };
 
+exports.getStaffByEmail = async (email) => {
+    const staff = await staffRepository.findByEmail(email);
+    if (!staff) throw new Error('Staff not found');
+    return staff;
+};
+
 // Update a staff member
 exports.updateStaff = async (staffId, { first_name, last_name,nid_num, email, role }) => {
     const staffMember = await staffRepository.findById(staffId);
@@ -65,4 +71,28 @@ exports.deleteStaff = async (staffId) => {
     const isDeleted = await staffRepository.deleteById(staffId);
     if (!isDeleted) throw new Error('Staff member not found or could not be deleted');
     return true;
+};
+
+exports.loginStaff = async (email, password) => {
+    try {
+        // Fetch the staff member by email
+        const staff = await staffRepository.findByEmail(email);
+
+        if (!staff) {
+            throw new Error("Staff not found");
+        }
+
+        // Ensure the password is compared correctly
+        const isMatch = await bcrypt.compare(password, staff.password);
+
+        if (!isMatch) {
+            throw new Error("Invalid credentials");
+        }
+
+        // If password matches, return the staff member's details (or generate a JWT)
+        return staff;
+
+    } catch (error) {
+        throw new Error(error.message);
+    }
 };

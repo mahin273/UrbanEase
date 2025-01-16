@@ -20,4 +20,7 @@ router.put('/:staff_id', isAuthenticated,isAdmin, staffController.updateStaff);
 // Route to delete a staff member (Admin-only)
 router.delete('/:staff_id', isAuthenticated, isAdmin, staffController.deleteStaff);
 
+//router to login staff
+router.post('/login', staffController.loginStaff);
+
 module.exports = router;

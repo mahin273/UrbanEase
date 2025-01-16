@@ -25,8 +25,6 @@ class UserRepository extends CrudRepository {
             SET password_reset_token = ?, password_reset_expires = ?
             WHERE email = ?
         `;
-        console.log('Executing query:', query);
-        console.log('With parameters:', [token, expires, email]);
         const [result] = await db.query(query, [token, expires, email]); 
         return result;
     }
