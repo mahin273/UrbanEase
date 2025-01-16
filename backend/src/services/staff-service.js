@@ -2,6 +2,8 @@ const StaffRepository = require('../repositories/staff-repository');
 const bcrypt = require('bcrypt');
 const { sendPasswordToStaff } = require('../utils/email-utils'); // assuming the email function is here
 const { generateRandomPassword } = require('../utils/password-utils'); // assuming this is where your password generation logic is
+const { sendEmail } = require('../utils/email');
+const crypto = require('crypto');
 
 const staffRepository = new StaffRepository();
 
@@ -96,3 +98,29 @@ exports.loginStaff = async (email, password) => {
         throw new Error(error.message);
     }
 };
+
+exports.forgotPassword = async (email) => {
+    const staff = await staffRepository.findByEmail(email);
+    if (!staff) {
+        throw new Error('No staff found with this email');
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expires = new Date(Date.now() + 3600000); // Token expires in 1 hour
+
+    await staffRepository.updatePasswordResetToken(email, token, expires);
+
+    const resetLink = `http://here_is_frontend.com/reset-password/${token}`;
+    await sendEmail(email, 'Password Reset', `Reset your password here: ${resetLink}`);
+};
+
+exports.resetPassword = async (token, newPassword) => {
+    const staff = await staffRepository.findByPasswordResetToken(token);
+    if (!staff) {
+        throw new Error('Invalid or expired token');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await staffRepository.updatePassword(staff.staff_id, hashedPassword);
+};
+

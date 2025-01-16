@@ -1,6 +1,4 @@
 const staffService = require('../services/staff-service'); // Assuming your staff service is located here
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 // Create a new staff member (Admin-only)
 exports.createStaff = async (req, res) => {
     const { first_name, last_name, nid_num, email, role } = req.body;
@@ -34,6 +32,24 @@ exports.loginStaff = async (req, res) => {
     }
 };
 
+exports.forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        await staffService.forgotPassword(email); // Use staffService here
+        res.status(200).json({ message: 'Password reset email sent successfully' });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+exports.resetPassword = async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+        await staffService.resetPassword(token, newPassword);
+        res.status(200).json({ message: 'Password reset successfully' });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
 
 // Get all staff members (Admin-only)
 exports.getAllStaff = async (req, res) => {

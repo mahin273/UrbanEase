@@ -23,4 +23,7 @@ router.delete('/:staff_id', isAuthenticated, isAdmin, staffController.deleteStaf
 //router to login staff
 router.post('/login', staffController.loginStaff);
 
+router.post('/forgot-password', staffController.forgotPassword);
+router.post('/reset-password', staffController.resetPassword);
+
 module.exports = router;

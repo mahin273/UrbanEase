@@ -9,6 +9,8 @@ const staffModel = {
         nid_num: 'VARCHAR(255) NOT NULL',
         role: "ENUM('field staff') NOT NULL", 
         password: "VARCHAR(255) NOT NULL",
+        password_reset_token: 'VARCHAR(255)', // Token for password reset
+        password_reset_expires: 'DATETIME', // Expiration for the token
         created_at: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
         updated_at: 'DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
     },
