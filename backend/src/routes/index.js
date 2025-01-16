@@ -4,6 +4,7 @@ const reportRoutes = require('./v1/report-routes')
 const upvoteRoutes = require('./v1/upvote-routes')
 const commentRoutes = require('./v1/comment-router')
 const staffRoutes = require('./v1/staff-routes')
+const taskRoutes = require('./v1/task-routes')
 
 
 const router = express.Router();
@@ -13,5 +14,6 @@ router.use('/users', userRoutes);
 router.use('/reports', reportRoutes);
 router.use('/upvote',upvoteRoutes)
 router.use('/reports/:reportId/comments', commentRoutes);
-router.use('/staff',staffRoutes)
+router.use('/staff', staffRoutes);
+router.use('/task',taskRoutes)
 module.exports = router;

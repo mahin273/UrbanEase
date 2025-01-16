@@ -11,7 +11,8 @@ class CrudRepository {
         const values = Object.values(data);
 
         const query = `INSERT INTO ${this.model.tableName} (${columns}) VALUES (${placeholders})`;
-
+        console.log('Executing Query:', query);
+        console.log('With Values:', values);
         const [result] = await pool.execute(query, values);
         return result.insertId;
     }
