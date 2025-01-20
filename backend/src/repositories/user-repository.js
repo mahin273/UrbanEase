@@ -1,6 +1,6 @@
 const CrudRepository = require('./crud-repository');
 const userModel = require('../models/user-model');
-const db = require('../config/db'); 
+const db = require('../config/db');
 
 class UserRepository extends CrudRepository {
     constructor() {
@@ -21,31 +21,35 @@ class UserRepository extends CrudRepository {
 
     async updatePasswordResetToken(email, token, expires) {
         const query = `
-            UPDATE ${this.model.tableName}
+            UPDATE ${userModel.tableName}
             SET password_reset_token = ?, password_reset_expires = ?
             WHERE email = ?
         `;
-        const [result] = await db.query(query, [token, expires, email]); 
+        const [result] = await db.query(query, [token, expires, email]);
         return result;
     }
 
     async findByPasswordResetToken(token) {
         const query = `
-            SELECT * FROM ${this.model.tableName}
+            SELECT * FROM ${userModel.tableName}
             WHERE password_reset_token = ? AND password_reset_expires > NOW()
         `;
-        const [result] = await db.query(query, [token]); 
-        return result[0]; 
+        const [result] = await db.query(query, [token]);
+        return result[0];
     }
 
     async updatePassword(userId, hashedPassword) {
         const query = `
-            UPDATE ${this.model.tableName}
+            UPDATE ${userModel.tableName}
             SET password_hash = ?, password_reset_token = NULL, password_reset_expires = NULL
             WHERE user_id = ?
         `;
-        await db.query(query, [hashedPassword, userId]); 
+        await db.query(query, [hashedPassword, userId]);
     }
+    findById(id) {
+        return this.findOneBy('user_id', id);
+    }
+
 }
 
 module.exports = UserRepository;

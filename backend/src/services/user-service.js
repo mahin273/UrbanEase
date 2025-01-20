@@ -95,3 +95,25 @@ exports.resetPassword = async (token, newPassword) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await userRepository.updatePassword(user.user_id, hashedPassword);
 };
+
+exports.updateUserProfilePic = async (userId, profilePicUrl) => {
+    try {
+        const user = await userRepository.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Update profile picture in the database
+        const updatedUser = await userRepository.updateById(userId, { profile_picture: profilePicUrl });
+
+        if (!updatedUser) {
+            throw new Error('Failed to update user profile picture');
+        }
+
+        return updatedUser;
+    } catch (error) {
+        console.error('Error updating profile picture:', error);
+        throw error;  // Propagate error to the controller
+    }
+};
+

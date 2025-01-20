@@ -4,7 +4,7 @@
   "description": "Local Community Problem Reporting System",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "nodemon src/index.js"
   },
   "author": "Mahin & Asif",
@@ -23,5 +23,9 @@
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.7",
     "otp-generator": "^4.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   }
 }

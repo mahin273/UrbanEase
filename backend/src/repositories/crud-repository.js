@@ -49,21 +49,32 @@ class CrudRepository {
   
  
 
-    async updateById(id, data) {
-        const updates = Object.keys(data).map((key) => `${key} = ?`).join(', ');
-        const values = [...Object.values(data), id];
+async updateById(id, data) {
+    const updates = Object.keys(data).map((key) => `${key} = ?`).join(', ');
+    const values = [...Object.values(data), id];
 
-        const query = `UPDATE ${this.model.tableName} SET ${updates} WHERE ${this.model.primaryKey} = ?`;
+    const query = `UPDATE ${this.model.tableName} SET ${updates} WHERE ${this.model.primaryKey} = ?`;
 
-        const [result] = await pool.execute(query, values);
-        return result.affectedRows > 0;
-    }
+    const [result] = await pool.execute(query, values);
+    return result.affectedRows > 0;
+}
+
 
     async deleteById(id) {
         const query = `DELETE FROM ${this.model.tableName} WHERE ${this.model.primaryKey} = ?`;
         const [result] = await pool.execute(query, [id]);
         return result.affectedRows > 0;
     }
+
+    async findById(id) {
+        const query = `SELECT * FROM ${this.model.tableName} WHERE ${this.model.primaryKey} = ? LIMIT 1`;
+        const [rows] = await pool.execute(query, [id]);
+        return rows[0] || null;
+    }
 }
+
+
+
+
 
 module.exports = CrudRepository;

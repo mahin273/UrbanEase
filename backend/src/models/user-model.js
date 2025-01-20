@@ -19,6 +19,7 @@ const userModel = {
         password_reset_expires: 'DATETIME', // Expiration for the token
         created_at: 'DATETIME DEFAULT CURRENT_TIMESTAMP',
         updated_at: 'DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
+        profile_picture: 'VARCHAR(2083)', // URL of the profile picture
     },
 };
 
