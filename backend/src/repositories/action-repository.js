@@ -1,3 +1,4 @@
+// **File: repositories/action-repository.js**
 const CrudRepository = require('./crud-repository');
 const actionModel = require('../models/action-model');
 
@@ -7,19 +8,8 @@ class ActionRepository extends CrudRepository {
     }
 
     async findByTaskId(task_id) {
-        return await this.findManyBy('task_id', task_id);
-    }
-
-    async findByStaffId(staff_id) {
-        return await this.findManyBy('staff_id', staff_id);
-    }
-
-    async findByStatus(status) {
-        return await this.findManyBy('status', status);
-    }
-
-    async findById(action_id) {
-        return await this.findOneBy(this.model.primaryKey, action_id);
+        const query = `SELECT * FROM ${this.model.tableName} WHERE task_id = ? ORDER BY created_at DESC`;
+        return await this.executeRawQuery(query, [task_id]);
     }
 }
 

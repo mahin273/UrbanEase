@@ -1,8 +1,24 @@
 const reportService = require('../services/report-service');
 
 exports.createReport = async (req, res) => {
+    console.log('Form Data:', req.body);  // Log body data
+    console.log('Uploaded File:', req.file);
     try {
-        const report = await reportService.createReport(req.body);
+        const { user_id, title, description, category_id, location, google_maps_link, visibility,status } = req.body;
+        const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;  // Get image URL if uploaded
+
+        const report = await reportService.createReport({
+            user_id,
+            title,
+            description,
+            category_id,
+            location,
+            google_maps_link,
+            visibility,
+            status,
+            imageUrl,  // Add imageUrl to the report data
+        });
+
         res.status(201).json({ message: 'Report created successfully', report });
     } catch (error) {
         res.status(400).json({ error: error.message });

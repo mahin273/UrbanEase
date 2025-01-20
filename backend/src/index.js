@@ -5,16 +5,18 @@ const cors = require('cors');
 const app = express();
 
 const corsOptions = {
-    origin: 'http://localhost:5173', // Allow all origins for now (you can restrict to a specific URL like 'http://localhost:5173' later)
-    methods: ['GET', 'POST','DELETE'], // Allow only GET and POST requests
+    origin: 'http://localhost:5173', // Allow your front-end URL, change this when deploying
+    methods: ['GET', 'POST', 'DELETE'], // Allow only the specified HTTP methods
     credentials: true, // Allow cookies and credentials to be sent
 };
-app.use(cors(corsOptions));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(cors(corsOptions)); // Enable CORS with your custom options
 
-app.use('/api', apiRoutes); 
+app.use(express.json()); // Parse JSON payloads
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded payloads
+
+app.use('/api', apiRoutes); // API route prefix
+app.use('/uploads', express.static('uploads')); // Serve uploaded files from 'uploads' folder
 
 // Start the server
 app.listen(serverConfig.PORT, () => {

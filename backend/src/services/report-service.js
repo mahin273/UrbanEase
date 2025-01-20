@@ -2,7 +2,7 @@ const ReportRepository = require('../repositories/report-repository');
 
 const reportRepository = new ReportRepository();
 
-exports.createReport = async ({ user_id, title, description, category_id, location, google_maps_link, status, visibility }) => {
+exports.createReport = async ({ user_id, title, description, category_id, location, google_maps_link, visibility,status, imageUrl }) => {
     const report = await reportRepository.create({
         user_id,
         title,
@@ -10,13 +10,13 @@ exports.createReport = async ({ user_id, title, description, category_id, locati
         category_id,
         location,
         google_maps_link,
-        status,
         visibility,
+        status,
+        image_url: imageUrl,  // Save the image URL in the database
     });
 
     return report;
 };
-
 
 exports.getAllReports = async () => {
     return await reportRepository.findAll();
@@ -27,7 +27,8 @@ exports.getReportById = async (reportId) => {
     if (!report) throw new Error('Report not found');
     return report;
 };
-exports.updateReport = async (reportId, { title, description, category_id, location, google_maps_link, status, visibility }) => {
+
+exports.updateReport = async (reportId, { title, description, category_id, location, google_maps_link, visibility, imageUrl }) => {
     const report = await reportRepository.findById(reportId);
     if (!report) throw new Error('Report not found');
 
@@ -37,15 +38,14 @@ exports.updateReport = async (reportId, { title, description, category_id, locat
         category_id,
         location,
         google_maps_link,
-        status,
         visibility,
+        image_url: imageUrl,  // Update the image URL if changed
     });
 
     if (!updatedReport) throw new Error('Report could not be updated');
 
     return updatedReport;
 };
-
 
 exports.deleteReportById = async (reportId) => {
     const isDeleted = await reportRepository.deleteById(reportId);

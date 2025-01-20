@@ -11,6 +11,7 @@ const reportModel = {
         visibility: "ENUM('Public', 'Private') DEFAULT 'Public'",
         status: "ENUM('New', 'In Progress', 'Resolved') DEFAULT 'New'",
         user_id: 'INT NOT NULL',
+        image_url: 'VARCHAR(255)', // Store image URL
         created_at: 'DATETIME DEFAULT CURRENT_TIMESTAMP',
         updated_at: 'DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
     },

@@ -1,11 +1,14 @@
 function validateReportInput(req, res, next) {
-    const { title, description, category_id, visibility, user_id } = req.body;
+    console.log('Request Body:', req.body);  // Log to see if the form data is there
+
+    const { title, description, category_id, visibility,status, user_id } = req.body;
 
     const missingFields = [];
     if (!title) missingFields.push('title');
     if (!description) missingFields.push('description');
     if (!category_id) missingFields.push('category_id');
     if (!visibility) missingFields.push('visibility');
+    if (!status) missingFields.push('status');
     if (!user_id) missingFields.push('user_id');
 
     if (missingFields.length > 0) {
@@ -14,13 +17,10 @@ function validateReportInput(req, res, next) {
         });
     }
 
-    // Validate visibility options
-    if (!['Public', 'Private'].includes(visibility)) {
-        return res.status(400).json({ error: 'Invalid visibility option' });
-    }
-
     next();
 }
+
+
 function isAdmin(req, res, next) {
     const { user } = req;
     if (user && user.role === 'admin') {
@@ -29,4 +29,4 @@ function isAdmin(req, res, next) {
     return res.status(403).json({ error: 'Unauthorized: Admin access required' });
 }
 
-module.exports = { validateReportInput,isAdmin };
+module.exports = { validateReportInput, isAdmin };
