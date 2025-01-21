@@ -1,14 +1,14 @@
 function validateReportInput(req, res, next) {
     console.log('Request Body:', req.body);  // Log to see if the form data is there
 
-    const { title, description, category_id, visibility,status, user_id } = req.body;
+    const { title, description, category_id, visibility, user_id } = req.body;
 
     const missingFields = [];
     if (!title) missingFields.push('title');
     if (!description) missingFields.push('description');
     if (!category_id) missingFields.push('category_id');
     if (!visibility) missingFields.push('visibility');
-    if (!status) missingFields.push('status');
+    
     if (!user_id) missingFields.push('user_id');
 
     if (missingFields.length > 0) {

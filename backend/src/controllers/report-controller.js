@@ -4,7 +4,8 @@ exports.createReport = async (req, res) => {
     console.log('Form Data:', req.body);  // Log body data
     console.log('Uploaded File:', req.file);
     try {
-        const { user_id, title, description, category_id, location, google_maps_link, visibility,status } = req.body;
+        const { user_id, title, description, category_id, location, google_maps_link, visibility } = req.body;
+        
         const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;  // Get image URL if uploaded
 
         const report = await reportService.createReport({
@@ -15,7 +16,7 @@ exports.createReport = async (req, res) => {
             location,
             google_maps_link,
             visibility,
-            status,
+        
             imageUrl,  // Add imageUrl to the report data
         });
 

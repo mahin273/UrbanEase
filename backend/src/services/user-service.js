@@ -82,7 +82,7 @@ exports.forgotPassword = async (email) => {
 
     await userRepository.updatePasswordResetToken(email, token, expires);
 
-    const resetLink = `http://here_is_frontend.com/reset-password/${token}`;
+    const resetLink = `http://127.0.0.1:8080/password-reset.html?${token}`;
     await sendEmail(email, 'Password Reset', `Reset your password here: ${resetLink}`);
 };
 

@@ -2,7 +2,7 @@ const ReportRepository = require('../repositories/report-repository');
 
 const reportRepository = new ReportRepository();
 
-exports.createReport = async ({ user_id, title, description, category_id, location, google_maps_link, visibility,status, imageUrl }) => {
+exports.createReport = async ({ user_id, title, description, category_id, location, google_maps_link, visibility, imageUrl }) => {
     const report = await reportRepository.create({
         user_id,
         title,
@@ -11,7 +11,6 @@ exports.createReport = async ({ user_id, title, description, category_id, locati
         location,
         google_maps_link,
         visibility,
-        status,
         image_url: imageUrl,  // Save the image URL in the database
     });
 

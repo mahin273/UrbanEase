@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Staff</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 py-10">
+    <div class="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Assign Work to Staff</h2>
+        <div class="mb-6">
+            <label for="report-id" class="block text-gray-700 font-bold mb-2">Enter Report ID:</label>
+            <input type="text" id="report-id" placeholder="Enter Report ID" class="border p-2 w-full rounded">
+        </div>
+        <table class="min-w-full bg-white border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="py-2 px-4 border">Name</th>
+                    <th class="py-2 px-4 border">Username</th>
+                    <th class="py-2 px-4 border">User ID</th>
+                    <th class="py-2 px-4 border">NID</th>
+                    <th class="py-2 px-4 border">Email</th>
+                    <th class="py-2 px-4 border">Phone Number</th>
+                    <th class="py-2 px-4 border">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="text-center">
+                    <td class="py-2 px-4 border">John Doe</td>
+                    <td class="py-2 px-4 border">johndoe</td>
+                    <td class="py-2 px-4 border">1001</td>
+                    <td class="py-2 px-4 border">123456789</td>
+                    <td class="py-2 px-4 border">johndoe@example.com</td>
+                    <td class="py-2 px-4 border">+1234567890</td>
+                    <td class="py-2 px-4 border">
+                        <button class="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700">Assign</button>
+                    </td>
+                </tr>
+                <tr class="text-center">
+                    <td class="py-2 px-4 border">Jane Smith</td>
+                    <td class="py-2 px-4 border">janesmith</td>
+                    <td class="py-2 px-4 border">1002</td>
+                    <td class="py-2 px-4 border">987654321</td>
+                    <td class="py-2 px-4 border">janesmith@example.com</td>
+                    <td class="py-2 px-4 border">+0987654321</td>
+                    <td class="py-2 px-4 border">
+                        <button class="bg-blue-600 text-white py-1 px-3 rounded hover:bg-blue-700">Assign</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="index.html"
+            class="mt-6 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 inline-block text-center mt-4">Back
+            to Dashboard</a>
+    </div>
+</body>
+
+</html>

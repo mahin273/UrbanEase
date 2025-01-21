@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
+        <form id="loginForm" method="POST">
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                <input type="email" id="email" name="email" required
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Enter your email">
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+                <input type="password" id="password" name="password" required
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Enter your password">
+            </div>
+            <button type="submit"
+                class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Login</button>
+        </form>
+        <p class="mt-4 text-center text-gray-600">
+            Forgot your password?
+            <a href="forgot-password.html" class="text-blue-600 hover:underline">Reset here</a>
+        </p>
+    </div>
+
+    <!-- Login script -->
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent form from submitting the default way
+
+            // Get form data
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Prepare data to send
+            const data = {
+                email: email,
+                password: password
+            };
+
+            try {
+                // Send login request to the backend API
+                const response = await axios.post('http://localhost:4001/api/users/login', data, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                // Handle successful response
+                if (response.data.token) {
+                    alert('Login successful!');
+                    localStorage.setItem('token', response.data.token);  // Store token
+                    window.location.href = 'feed.html';  // Redirect to dashboard
+                } else {
+                    alert('Login failed: ' + response.data.error);
+                }
+            } catch (error) {
+                console.error('Error logging in:', error);
+                alert('Error connecting to the server. Please try again later.');
+            }
+        });
+    </script>
+
+</body>
+
+</html>
