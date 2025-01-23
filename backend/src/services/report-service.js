@@ -1,6 +1,11 @@
 const ReportRepository = require('../repositories/report-repository');
+const CategoryRepository = require('../repositories/category-repository');
+const UserRepository = require('../repositories/user-repository')
 
 const reportRepository = new ReportRepository();
+const categoryRepository = new CategoryRepository();
+const userRepository = new UserRepository();
+
 
 exports.createReport = async ({ user_id, title, description, category_id, location, google_maps_link, visibility, imageUrl }) => {
     const report = await reportRepository.create({
@@ -18,8 +23,32 @@ exports.createReport = async ({ user_id, title, description, category_id, locati
 };
 
 exports.getAllReports = async () => {
-    return await reportRepository.findAll();
+    const reports = await reportRepository.findAllReportsWithDetails();
+
+    for (const report of reports) {
+        // Fetch category name
+        const category = await categoryRepository.findCategoryById(report.category_id);
+        if (category) {
+            report.category_name = category.category_name;  // Ensure correct field name here
+        } else {
+            report.category_name = 'Unknown Category';  // Fallback if category not found
+        }
+
+        // Fetch user details
+        const user = await userRepository.findById(report.user_id);
+        report.username = user ? user.username : 'Unknown User';
+    }
+
+    // Return the updated reports array
+    return reports;
 };
+
+
+
+
+
+
+
 
 exports.getReportById = async (reportId) => {
     const report = await reportRepository.findById(reportId);

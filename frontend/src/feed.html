@@ -7,7 +7,6 @@
     <title>Community Feed</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Add custom styles if necessary */
         .form-button {
             background-color: #3182ce;
             color: white;
@@ -22,225 +21,148 @@
             background-color: #2b6cb0;
         }
 
-        /* Ensure the middle section is scrollable */
         .main-content {
             overflow-y: auto;
             max-height: calc(100vh - 40px);
-            /* Adjust based on top padding/margin */
             flex-grow: 1;
         }
 
-        /* Fix the sidebar on the left and right */
         .sidebar {
             position: sticky;
             top: 0;
             height: 100vh;
-            /* Full height of the viewport */
         }
     </style>
 </head>
 
 <body class="bg-gray-100 py-10">
 
-    <!-- Main Wrapper with Flex Layout -->
     <div class="flex max-w-7xl mx-auto">
 
-        <!-- Left Sidebar -->
         <div class="w-1/4 bg-white p-6 rounded-lg shadow-lg sidebar">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">UrbanEase</h2>
             <ul class="space-y-6">
-                <li><a href="feed.html" class="text-lg font-semibold text-gray-700 hover:text-blue-600">Community Feed</a></li>
-                <li><a href="user-profile-dashboard.html" class="text-lg font-semibold text-gray-700 hover:text-blue-600">Profile & Dashboard</a></li>
+                <li><a href="feed.html" class="text-lg font-semibold text-gray-700 hover:text-blue-600">Community
+                        Feed</a></li>
+                <li><a href="user-profile-dashboard.html"
+                        class="text-lg font-semibold text-gray-700 hover:text-blue-600">Profile & Dashboard</a></li>
                 <li><a href="#" class="text-lg font-semibold text-gray-700 hover:text-blue-600">Notifications</a></li>
-                <li><a href="settings.html" class="text-lg font-semibold text-gray-700 hover:text-blue-600">Settings</a></li>
+                <li><a href="settings.html" class="text-lg font-semibold text-gray-700 hover:text-blue-600">Settings</a>
+                </li>
             </ul>
         </div>
 
-        <!-- Main Content (Feed and Widget) -->
         <div class="w-2/3 ml-6 main-content">
 
-            <!-- Create Post Section -->
             <div class="bg-white p-6 rounded-lg shadow-lg mb-8 form-container">
                 <h3 class="text-2xl font-semibold text-gray-700 mb-4">Create Report</h3>
 
                 <form id="reportForm" action="#" method="POST">
-                    <!-- Report Title -->
                     <div class="mb-4">
-                        <label for="title" class="block form-label text-gray-700">Title</label>
+                        <label for="title" class="block text-gray-700">Title</label>
                         <input type="text" id="title" name="title" placeholder="Enter report title"
-                            class="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 form-input">
+                            class="border p-3 w-full rounded-lg">
                     </div>
 
-                    <!-- Report Description -->
                     <div class="mb-4">
-                        <label for="description" class="block form-label text-gray-700">Description</label>
+                        <label for="description" class="block text-gray-700">Description</label>
                         <textarea id="description" name="description" placeholder="Describe the issue..." rows="3"
-                            class="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 form-input"></textarea>
+                            class="border p-3 w-full rounded-lg"></textarea>
                     </div>
 
-                    <!-- Category Dropdown -->
                     <div class="mb-4">
-                        <label for="category" class="block form-label text-gray-700">Category</label>
-                        <select id="category" name="category"
-                            class="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 form-input">
+                        <label for="category" class="block text-gray-700">Category</label>
+                        <select id="category" name="category" class="border p-3 w-full rounded-lg">
                             <option value="public_safety">Public Safety</option>
                             <option value="infrastructure">Infrastructure</option>
-                            <option value="environmental_issues">Environmental Issues</option>
-                            <option value="crime_and_law">Crime and Law</option>
-                            <option value="transportation">Transportation</option>
-                            <option value="emergency_services">Emergency Services</option>
-                            <option value="utilities">Utilities</option>
-                            <option value="others">Others</option>
                         </select>
                     </div>
 
-                    <!-- Location Input -->
                     <div class="mb-4">
-                        <label for="location" class="block form-label text-gray-700">Location</label>
+                        <label for="location" class="block text-gray-700">Location</label>
                         <input type="text" id="location" name="location" placeholder="Enter location"
-                            class="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 form-input">
+                            class="border p-3 w-full rounded-lg">
                     </div>
 
-                    <!-- Google Maps Link -->
                     <div class="mb-4">
-                        <label for="google_maps" class="block form-label text-gray-700">Google Maps Link</label>
+                        <label for="google_maps" class="block text-gray-700">Google Maps Link</label>
                         <input type="url" id="google_maps" name="google_maps" placeholder="Enter Google Maps link"
-                            class="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 form-input">
+                            class="border p-3 w-full rounded-lg">
                     </div>
 
-                    <!-- Visibility Input -->
                     <div class="mb-4">
-                        <label for="visibility" class="block form-label text-gray-700">Visibility</label>
-                        <select id="visibility" name="visibility"
-                            class="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 form-input">
-                            <option value="public">Public</option>
-                            <option value="private">Private</option>
-                        </select>
+                        <label for="file" class="block text-gray-700">Upload Picture</label>
+                        <input type="file" id="file" name="file" class="border p-3 w-full rounded-lg">
                     </div>
 
-                    <!-- File Upload -->
-                    <div class="mb-4">
-                        <label for="file" class="block form-label text-gray-700">Upload Picture</label>
-                        <input type="file" id="file" name="file"
-                            class="border p-3 w-full rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 form-input">
-                    </div>
-
-                    <!-- Submit Button -->
                     <button type="submit" class="form-button">Submit Report</button>
                 </form>
             </div>
 
-            <!-- Feed: User Posts -->
             <div class="bg-white p-6 rounded-lg shadow-lg feed-reports">
                 <h3 class="text-2xl font-semibold text-gray-700 mb-6">User Reports</h3>
-                <!-- Reports will be dynamically inserted here -->
-            </div>
-        </div>
-
-        <!-- Right Sidebar: Recently Solved Problems -->
-        <div class="w-1/4 ml-6 sidebar">
-            <div class="bg-white p-6 rounded-lg shadow-lg">
-                <h3 class="text-2xl font-semibold text-gray-700 mb-6">Recently Solved Problems</h3>
-                <ul class="space-y-4">
-                    <li class="border-b pb-4">
-                        <p class="text-lg text-gray-800 font-semibold">Resolved Problem #1</p>
-                        <p class="text-sm text-gray-600">Description of the issue...</p>
-                    </li>
-                    <li class="border-b pb-4">
-                        <p class="text-lg text-gray-800 font-semibold">Resolved Problem #2</p>
-                        <p class="text-sm text-gray-600">Description of the issue...</p>
-                    </li>
-                    <li class="border-b pb-4">
-                        <p class="text-lg text-gray-800 font-semibold">Resolved Problem #3</p>
-                        <p class="text-sm text-gray-600">Description of the issue...</p>
-                    </li>
-                    <li class="border-b pb-4">
-                        <p class="text-lg text-gray-800 font-semibold">Resolved Problem #4</p>
-                        <p class="text-sm text-gray-600">Description of the issue...</p>
-                    </li>
-                    <li class="border-b pb-4">
-                        <p class="text-lg text-gray-800 font-semibold">Resolved Problem #5</p>
-                        <p class="text-sm text-gray-600">Description of the issue...</p>
-                    </li>
-                </ul>
             </div>
         </div>
 
     </div>
 
     <script>
-        // Function to handle form submission
         document.getElementById('reportForm').addEventListener('submit', async function (event) {
-            event.preventDefault(); // Prevent the default form submission behavior
-
-            // Create a new FormData object
-            const formData = new FormData();
-
-            // Append form fields to the FormData object
-            formData.append('title', document.getElementById('title').value);
-            formData.append('description', document.getElementById('description').value);
-            formData.append('category', document.getElementById('category').value);  // Fix here
-            formData.append('location', document.getElementById('location').value);
-            formData.append('google_maps', document.getElementById('google_maps').value);  // Fix here
-            formData.append('visibility', document.getElementById('visibility').value);
-            formData.append('file', document.getElementById('file').files[0]);  // Ensure file is appended
-
-            // Log the form data for debugging
-            for (const [key, value] of formData.entries()) {
-                console.log(key, value); // Log each key-value pair of the FormData
-            }
+            event.preventDefault();
+            const formData = new FormData(this);
 
             try {
-                // Send the form data to the backend using fetch
                 const response = await fetch('http://localhost:4001/api/reports/create', {
                     method: 'POST',
-                    body: formData, // Send the formData (which includes the file)
+                    body: formData,
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
-                    console.log('Report created successfully:', data);
-                    fetchReports();  // Refresh the feed after submission
-                } else {
-                    console.error('Failed to create report:', response.statusText);
-                    const errorData = await response.json();
-                    console.error(errorData);  // Log error message from the backend
+                    fetchReports();
                 }
             } catch (error) {
                 console.error('Error creating report:', error);
             }
         });
 
-        // Function to fetch reports and display them in the feed
         async function fetchReports() {
-            try {
-                const response = await fetch('http://localhost:4001/api/reports'); // Adjust the URL if needed
-                const reports = await response.json();
+                try {
+                    const response = await fetch('http://localhost:4001/api/reports');
+                    const reports = await response.json();
 
-                const reportsContainer = document.querySelector('.feed-reports');
-                reportsContainer.innerHTML = ''; // Clear the current feed
+                    const reportsContainer = document.querySelector('.feed-reports');
+                    reportsContainer.innerHTML = '';
 
-                reports.forEach(report => {
-                    const reportElement = document.createElement('div');
-                    reportElement.classList.add('mb-8', 'border-b', 'pb-6');
+                    reports.forEach(report => {
+                        const reportElement = document.createElement('div');
+                        reportElement.classList.add('mb-8', 'border-b', 'pb-6');
 
-                    reportElement.innerHTML = `
-                        <h4 class="text-xl font-semibold text-gray-800">${report.title}</h4>
-                        <p class="text-sm text-gray-600">Category: ${report.category}</p>
-                        <p class="text-sm text-gray-600">Location: ${report.location}</p>
-                        <p class="text-sm text-gray-600">Visibility: ${report.visibility}</p>
-                        <p class="mt-2 text-gray-700">${report.description}</p>
-                        <a href="${report.google_maps_link}" class="text-blue-600 hover:underline mt-2 block">View on Google Maps</a>
-                    `;
+                        // Prepend the base URL to the image path
+                        const imageUrl = report.image_url ? `http://localhost:4001${report.image_url}` : 'https://via.placeholder.com/150';
 
-                    reportsContainer.appendChild(reportElement);
-                });
-            } catch (error) {
-                console.error('Error fetching reports:', error);
+                        reportElement.innerHTML = `
+                            <h4 class="text-xl font-semibold text-gray-800">${report.username}</h4>
+                            <p class="text-lg text-gray-700">${report.title}</p>
+                            <p class="text-sm text-gray-600">Category: ${report.category_name}</p>
+                            <p class="text-sm text-gray-600">Description: ${report.description}</p>
+                            <p class="text-sm text-gray-600">Location: ${report.location}</p>
+                            <a href="${report.google_maps_link}" class="text-blue-600 hover:underline">View on Google Maps</a>
+                            <img src="${imageUrl}" class="mt-4 rounded-lg" style="width: 800px; height: 400px;">
+                        <div class="mt-4 flex space-x-4">
+                            <button class="text-blue-500">Upvote</button>
+                            <button class="text-gray-500">Comment</button>
+                             </div>
+                        `;
+
+
+                        reportsContainer.appendChild(reportElement);
+                    });
+                } catch (error) {
+                    console.error('Error fetching reports:', error);
+                }
             }
-        }
 
-        // Initial fetch when the page loads
+
         fetchReports();
     </script>
 </body>

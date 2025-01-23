@@ -48,7 +48,36 @@ class CrudRepository {
 
   
  
+    async findAllReportsWithDetails() {
+        try {
+            const query = `
+            SELECT 
+                r.*, 
+                u.username, 
+                c.category_name  -- Ensure this column exists in your categories table
+            FROM ${this.model.tableName} r
+            JOIN users u ON r.user_id = u.user_id
+            JOIN categories c ON r.category_id = c.category_id
+        `;
 
+            const result = await pool.execute(query);
+
+            // Debugging output
+            console.log('Query Result:', result);
+
+            if (!result || !Array.isArray(result[0])) {
+                console.error('Error: Query result is not an array:', result);
+                return [];
+            }
+
+            const rows = result[0];
+            console.log('Rows:', rows);
+            return rows;
+        } catch (error) {
+            console.error('Error executing query:', error);
+            throw error;
+        }
+    }
 async updateById(id, data) {
     const updates = Object.keys(data).map((key) => `${key} = ?`).join(', ');
     const values = [...Object.values(data), id];

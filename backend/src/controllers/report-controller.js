@@ -29,11 +29,14 @@ exports.createReport = async (req, res) => {
 exports.getAllReports = async (req, res) => {
     try {
         const reports = await reportService.getAllReports();
+        console.log('Reports to send:', reports);  // Log the reports before sending
         res.status(200).json(reports);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
+
 
 exports.getReportById = async (req, res) => {
     try {
