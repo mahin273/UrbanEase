@@ -27,7 +27,21 @@ class ReportRepository extends CrudRepository {
         return await this.findOneBy(this.model.primaryKey, reportId);
     }
 
+
+
+    async findByUserIdAndStatus(userId, status) {
+        const query = `SELECT * FROM ${this.model.tableName} 
+                       WHERE user_id = ? AND status = ?`;
+        return await this.executeRawQuery(query, [userId, status]);
+    }
+
+    async findByUserId(userId) {
+        const query = `SELECT * FROM ${this.model.tableName} 
+                       WHERE user_id = ?`;
+        return await this.executeRawQuery(query, [userId]);
+    }
 }
+
 
 
 module.exports = ReportRepository;

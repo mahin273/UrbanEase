@@ -100,6 +100,11 @@ async updateById(id, data) {
         const [rows] = await pool.execute(query, [id]);
         return rows[0] || null;
     }
+
+    async executeRawQuery(query, params = []) {
+        const [rows] = await pool.query(query, params);
+        return rows;
+    }
 }
 
 

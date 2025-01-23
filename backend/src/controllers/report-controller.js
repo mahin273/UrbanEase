@@ -67,3 +67,23 @@ exports.deleteReport = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+exports.getReportStatsByStatus = async (req, res) => {
+    try {
+        const { stats } = req.query;  // Get the 'stats' query parameter from the URL
+        const userId = req.params.userId;  // Get the userId from the URL path
+
+        const { reports, reportCounts } = await reportService.getReportStatsByStatus(userId, stats);
+
+        res.status(200).json({
+            reports,
+            stats: reportCounts  // Include the stats in the response
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+

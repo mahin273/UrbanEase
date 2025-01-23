@@ -23,5 +23,6 @@ router.get('/', reportController.getAllReports);
 router.get('/:id', reportController.getReportById);
 router.put('/:id', reportController.updateReport);
 router.delete('/:id', reportController.deleteReport);
+router.get('/user/:userId/stats', reportController.getReportStatsByStatus);
 
 module.exports = router;
