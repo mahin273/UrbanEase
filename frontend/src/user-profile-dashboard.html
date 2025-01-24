@@ -30,11 +30,11 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-gray-700">First Name</label>
-                        <p id="first-name" class="text-gray-900">Loading...</p>
+                        <input type="text" id="firstname" class="text-gray-900 border p-2 rounded" placeholder="First Name">
                     </div>
                     <div>
                         <label class="block text-gray-700">Last Name</label>
-                        <p id="last-name" class="text-gray-900">Loading...</p>
+                        <input type="text" id="lastname" class="text-gray-900 border p-2 rounded" placeholder="Last Name">
                     </div>
                     <div>
                         <label class="block text-gray-700">Username</label>
@@ -50,13 +50,17 @@
                     </div>
                     <div>
                         <label class="block text-gray-700">Date of Birth</label>
-                        <p id="dob" class="text-gray-900">Loading...</p>
+                        <input type="text" id="dob" class="text-gray-900 border p-2 rounded"
+                            placeholder="Enter Date of Birth (YYYY-MM-DD)" value="Not filled">
                     </div>
                     <!-- Optional fields (editable later) -->
                     <div>
                         <label class="block text-gray-700">Gender</label>
-                        <input type="text" id="gender" class="text-gray-900 border p-2 rounded"
-                            placeholder="Enter Gender" value="Not filled">
+                        <select id="gender" class="text-gray-900 border p-2 rounded">
+                            <option value="Not filled">Not filled</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
                     </div>
                     <div>
                         <label class="block text-gray-700">Phone Number</label>
@@ -141,23 +145,39 @@
                 const userId = getUserIdFromToken();
                 if (!userId) return;
 
+                // Show loading text
+                document.getElementById('user-name').textContent = 'Loading...';
+                document.getElementById('user-email').textContent = 'Loading...';
+
                 // Fetch user profile info
                 const response = await axios.get(`http://localhost:4001/api/users/${userId}`, {
                     headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
                 });
+                
 
                 // Update profile details
-                document.getElementById('first-name').textContent = response.data.firstname;
-                document.getElementById('last-name').textContent = response.data.lastname;
+                 
+                document.getElementById('firstname').value = response.data.firstname;
+                document.getElementById('lastname').value = response.data.lastname;
                 document.getElementById('username').textContent = response.data.username;
                 document.getElementById('nid-num').textContent = response.data.nid_num;
                 document.getElementById('email').textContent = response.data.email;
-                document.getElementById('dob').textContent = response.data.dob;
+                document.getElementById('dob').value = response.data.dob || 'Not filled';
                 document.getElementById('gender').value = response.data.gender || 'Not filled';
                 document.getElementById('phone-num').value = response.data.phone_num || 'Not filled';
                 document.getElementById('city').value = response.data.city || 'Not filled';
                 document.getElementById('postal-code').value = response.data.postal_code || 'Not filled';
-                document.getElementById('profile-picture').src = response.data.profile_picture || 'default-profile-picture-url'; // Default URL if no picture
+
+                // Set profile picture
+                const profilePicUrl = `http://localhost:4001${response.data.profile_picture}`;
+                document.getElementById('profile-picture').src = profilePicUrl;
+
+                // Set user name and email
+                document.getElementById('user-name').textContent = `${response.data.firstname} ${response.data.lastname}`;
+                document.getElementById('user-email').textContent = response.data.email;
+
+                // Log profile picture URL
+                console.log('Profile Picture URL:', profilePicUrl);
 
             } catch (error) {
                 console.error('Error fetching user profile:', error);
@@ -165,34 +185,59 @@
         }
 
         async function saveUserProfile() {
-            try {
-                const userId = getUserIdFromToken();
-                if (!userId) return;
+                try {
+                    const userId = getUserIdFromToken();
+                    if (!userId) return;
 
-                const formData = new FormData();
-                formData.append('gender', document.getElementById('gender').value);
-                formData.append('phone_num', document.getElementById('phone-num').value);
-                formData.append('city', document.getElementById('city').value);
-                formData.append('postal_code', document.getElementById('postal-code').value);
+                    const firstName = document.getElementById('firstname').value;  // Default to an empty string if empty
+                    const lastName = document.getElementById('lastname').value;    // Default to an empty string if empty
+                    const gender = document.getElementById('gender').value.trim();
+                    const phoneNum = document.getElementById('phone-num').value.trim();
+                    const city = document.getElementById('city').value.trim();
+                    const postalCode = document.getElementById('postal-code').value.trim();
+                    const dob = document.getElementById('dob').value.trim();
 
-                const profilePicture = document.getElementById('profile-picture-input').files[0];
-                if (profilePicture) {
-                    formData.append('profile_picture', profilePicture);
-                }
-
-                await axios.put(`http://localhost:4001/api/users/${userId}`, formData, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
-                        'Content-Type': 'multipart/form-data'
+                    // Ensure required fields are not empty
+                    if (!firstName || !lastName) {
+                        alert('First Name and Last Name are required.');
+                        return;
                     }
-                });
 
-                alert('Profile updated successfully!');
-                fetchUserProfile(); // Refresh profile details after saving
-            } catch (error) {
-                console.error('Error updating profile:', error);
+                    const formData = new FormData();
+                    formData.append('firstname', firstName);  // Verify the backend expects 'first_name'
+                    formData.append('lastname', lastName);      // Verify the backend expects 'last_name'
+                    console.log("First Name:", firstName);
+                    console.log("Last Name:", lastName);
+                    formData.append('gender', gender || 'Not filled');
+                    formData.append('phone_num', phoneNum || 'Not filled');
+                    formData.append('city', city || 'Not filled');
+                    formData.append('postal_code', postalCode || 'Not filled');
+                    formData.append('dob', dob || 'Not filled');
+                    console.log("Formdata is: ",[...formData]);
+                    // Check if a profile picture was uploaded
+                    const profilePicture = document.getElementById('profile-picture-input').files[0];
+                    if (profilePicture) {
+                        formData.append('profile_picture', profilePicture);
+                    }
+
+                    // Debug: log formData to ensure everything is set properly
+                    console.log([...formData]); // This will show all the key-value pairs
+
+                    // Send the updated data to the server
+                    await axios.patch(`http://localhost:4001/api/users/${userId}`, formData, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    });
+
+                    alert('Profile updated successfully!');
+                    fetchUserProfile(); // Refresh profile details after saving
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                }
             }
-        }
+
 
         // Save profile when the button is clicked
         document.getElementById('save-profile-btn').addEventListener('click', saveUserProfile);
@@ -208,6 +253,7 @@
                 const response = await axios.get(`http://localhost:4001/api/reports/user/${userId}/stats`, {
                     headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
                 });
+                
 
                 // Hide loading after data is fetched
                 document.getElementById('loading').classList.add('hidden');
@@ -222,44 +268,44 @@
         }
 
         async function fetchDetails(type) {
-            try {
-                const userId = getUserIdFromToken();
-                if (!userId) return;
+                try {
+                    const userId = getUserIdFromToken();
+                    if (!userId) return;
 
-                // Show loading indicator when fetching report details
-                document.getElementById('loading').classList.remove('hidden');
+                    // Show loading indicator when fetching report details
+                    document.getElementById('loading').classList.remove('hidden');
 
-                let url = `http://localhost:4001/api/reports/user/${userId}/stats`; // Default URL for total reports
-                if (type !== 'total') {
-                    url += `?stats=${type}`; // Append the type if it's not 'total' (e.g., pending or resolved)
+                    let url = `http://localhost:4001/api/reports/user/${userId}/stats`; // Default URL for total reports
+                    if (type !== 'total') {
+                        url += `?stats=${type}`; // Append the type if it's not 'total' (e.g., pending or resolved)
+                    }
+
+                    const response = await axios.get(url, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                    });
+
+                    // Hide loading after data is fetched
+                    document.getElementById('loading').classList.add('hidden');
+
+                    const detailsContainer = document.getElementById('details-container');
+                    const detailsList = document.getElementById('report-details');
+
+                    if (response.data.reports.length === 0) {
+                        detailsList.innerHTML = `<li>No reports found for this category.</li>`;
+                    } else {
+                        detailsList.innerHTML = response.data.reports.map(report =>
+                            `<li class="py-2 px-4 bg-white rounded-lg mb-2 shadow-md">${report.title} - ${report.status}</li>`
+                        ).join('');
+                    }
+
+                    detailsContainer.classList.remove('hidden');
+                } catch (error) {
+                    console.error('Error fetching report details:', error);
+                    document.getElementById('loading').classList.add('hidden');
                 }
-
-                const response = await axios.get(url, {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-                });
-
-                // Hide loading after data is fetched
-                document.getElementById('loading').classList.add('hidden');
-
-                const detailsContainer = document.getElementById('details-container');
-                const detailsList = document.getElementById('report-details');
-
-                if (response.data.reports.length === 0) {
-                    detailsList.innerHTML = `<li>No reports found for this category.</li>`;
-                } else {
-                    detailsList.innerHTML = response.data.reports.map(report =>
-                        `<li class="py-2 px-4 bg-white rounded-lg mb-2 shadow-md">${report.title} - ${report.status}</li>`
-                    ).join('');
-                }
-
-                detailsContainer.classList.remove('hidden');
-            } catch (error) {
-                console.error('Error fetching report details:', error);
-                document.getElementById('loading').classList.add('hidden');
             }
-        }
 
-        // Fetch initial user profile and stats
+        // Initial calls to fetch user profile and stats
         fetchUserProfile();
         fetchUserStats();
     </script>

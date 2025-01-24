@@ -21,15 +21,15 @@ class UserRepository extends CrudRepository {
 
  
     async updateById(id, updatedData) {
-        const { firstname, lastname, username, phone_num, gender, city, postal_code, profile_picture } = updatedData;
+        const { firstname, lastname, dob, phone_num, gender, city, postal_code, profile_picture } = updatedData;
 
         const query = `
             UPDATE ${userModel.tableName}
-            SET firstname = ?, lastname = ?, username = ?, phone_num = ?, gender = ?, city = ?, postal_code = ?, profile_picture = ?
+            SET firstname = ?, lastname = ?, dob = ?, phone_num = ?, gender = ?, city = ?, postal_code = ?, profile_picture = ?
             WHERE user_id = ?
         `;
 
-        const [result] = await db.query(query, [firstname, lastname, username, phone_num, gender, city, postal_code, profile_picture, id]);
+        const [result] = await db.query(query, [firstname, lastname, dob, phone_num, gender, city, postal_code, profile_picture, id]);
         return result.affectedRows > 0 ? await this.findById(id) : null;
     }
 

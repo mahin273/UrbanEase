@@ -34,29 +34,59 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-    const { id } = req.params;
-    const { firstname, lastname, username, phone_num, gender, city, postal_code, profile_picture } = req.body;
-    console.log('Request Body:', req.body);
+    console.log('Request Params:', req.params);  // Check the extracted user_id
+    console.log('Form Data:', req.body);         // Check the form data
+    console.log('Uploaded File:', req.file);     // Check the uploaded file
 
     try {
-        // Validate the input data (for required fields)
-        if (!firstname || !lastname || !username) {
-            return res.status(400).json({ error: 'Firstname, lastname, and username are required' });
+        const { id } = req.params;  // Extract user_id from the URL params
+
+        if (!id) {
+            return res.status(400).json({ error: 'User ID is required' });
         }
 
-        // Update user with the provided data
-        const updatedUser = await userService.updateUser(id, { firstname, lastname, username, phone_num, gender, city, postal_code, profile_picture });
+        const { firstname, lastname, phone_num, gender, city, postal_code, dob } = req.body;
+        const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+        console.log('Image URL:', imageUrl);
 
-        if (!updatedUser) {
+        const sanitizedData = {
+            firstname: firstname || undefined,  // Use undefined instead of null to exclude the field
+            lastname: lastname || undefined,
+            phone_num: phone_num || undefined,
+            gender: gender || undefined,
+            city: city || undefined,
+            postal_code: postal_code || undefined,
+            dob: dob || undefined,
+            profile_picture: imageUrl || undefined
+        };
+
+
+        console.log('Sanitized data: ', sanitizedData);
+
+        // Use the extracted `id` to find the user
+        const user = await userService.getUserById(id);
+        if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+        const update = await userService.updateUser(id, sanitizedData);
+
+        res.status(200).json({ message: 'User updated successfully', update });
     } catch (error) {
         console.error('Update user error:', error);
         res.status(400).json({ error: error.message });
     }
 };
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -105,32 +135,7 @@ exports.resetPassword = async (req, res) => {
     }
 };
 
-// controllers/user-controller.js
-exports.updateProfilePic = async (req, res) => {
-    console.log('Request Body:', req.body);
-    console.log('Request File:', req.file);
-    console.log('Request User:', req.user);
 
-    if (!req.file) {
-        return res.status(400).json({ error: 'No file uploaded.' });
-    }
-
-    const userId = req.user.id;
-    const profilePicPath = req.file.path.replace(/\\/g, '/');  // Fix for Windows paths
-
-    try {
-        const updatedUser = await userService.updateUserProfilePic(userId, profilePicPath);
-
-        if (!updatedUser) {
-            return res.status(500).json({ error: 'Error updating profile picture.' });
-        }
-
-        res.status(200).json({ message: 'Profile picture updated successfully.' });
-    } catch (err) {
-        console.error('Profile update error:', err);
-        res.status(500).json({ error: 'Error updating profile picture.', details: err.message });
-    }
-};
 
 
 

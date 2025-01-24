@@ -8,7 +8,7 @@ const app = express();
 
 const corsOptions = {
     origin: 'http://127.0.0.1:8080', // Allow your front-end URL, change this when deploying
-    methods: ['GET', 'POST', 'DELETE', 'PUT'], // Allow only the specified HTTP methods
+    methods: ['GET', 'POST', 'DELETE', 'PUT', 'PATCH'], // Allow only the specified HTTP methods
     credentials: true, // Allow cookies and credentials to be sent
 };
 

@@ -6,7 +6,8 @@ exports.createReport = async (req, res) => {
     try {
         const { user_id, title, description, category_id, location, google_maps_link, visibility } = req.body;
         
-        const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;  // Get image URL if uploaded
+        const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+  // Get image URL if uploaded
 
         const report = await reportService.createReport({
             user_id,

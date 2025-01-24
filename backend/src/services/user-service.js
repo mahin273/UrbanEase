@@ -74,6 +74,7 @@ exports.updateUser = async (id, updatedData) => {
 
 
 
+
 exports.deleteUserById = async (id) => {
     const isDeleted = await userRepository.deleteById(id);
     if (!isDeleted) throw new Error('User not found or could not be deleted');
