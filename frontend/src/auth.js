@@ -1,7 +1,7 @@
 function checkAuth() {
     document.addEventListener('DOMContentLoaded', () => {
         const token = localStorage.getItem('authToken');
-        console.log('Token from localStorage:', token);
+        // console.log('Token from localStorage:', token);
 
         const publicPages = ['login-user.html', 'index.html'];  // Add pages that don't need auth
         const currentPage = window.location.pathname.split('/').pop();

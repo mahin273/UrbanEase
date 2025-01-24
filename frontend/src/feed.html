@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Feed</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="auth.js"></script>
     <style>
         .form-button {
             background-color: #3182ce;
@@ -147,19 +149,21 @@
                     const imageUrl = report.image_url ? `http://localhost:4001${report.image_url}` : 'https://via.placeholder.com/150';
 
                     reportElement.innerHTML = `
-                            <h4 class="text-xl font-semibold text-gray-800">${report.username}</h4>
-                            <p class="text-lg text-gray-700">${report.title}</p>
-                            <p class="text-sm text-gray-600">Category: ${report.category_name}</p>
-                            <p class="text-sm text-gray-600">Description: ${report.description}</p>
-                            <p class="text-sm text-gray-600">Location: ${report.location}</p>
-                            <a href="${report.google_maps_link}" class="text-blue-600 hover:underline">View on Google Maps</a>
-                            <img src="${imageUrl}" class="mt-4 rounded-lg" style="width: 800px; height: 400px;">
-                        <div class="mt-4 flex space-x-4">
-                            <button class="text-blue-500">Upvote</button>
-                            <button class="text-gray-500">Comment</button>
-                             </div>
-                        `;
-
+                        <h4 class="text-xl font-semibold text-gray-800">${report.username}</h4>
+                        <p class="text-lg text-gray-700">${report.title}</p>
+                        <p class="text-sm text-gray-600">Category: ${report.category_name}</p>
+                        <p class="text-sm text-gray-600">Description: ${report.description}</p>
+                        <p class="text-sm text-gray-600">Location: ${report.location}</p>
+                        <a href="${report.google_maps_link}" class="text-blue-600 hover:underline">View on Google Maps</a>
+                        <img src="${imageUrl}" class="mt-4 rounded-lg" style="width: 800px; height: 400px;">
+                         <div class="mt-4 flex space-x-4">
+                    <button class="text-blue-500 upvote-button" onclick="upvoteReport(${report.report_id}, this)">Upvote</button>
+                    <button class="text-gray-500">Comment</button>
+                    <span class="ml-4 text-gray-700" id="vote-count-${report.report_id}">
+                        Votes: ${report.vote_count !== undefined ? report.vote_count : 0}
+                    </span>
+                </div>
+                    `;
 
                     reportsContainer.appendChild(reportElement);
                 });
@@ -167,6 +171,75 @@
                 console.error('Error fetching reports:', error);
             }
         }
+    async function upvoteReport(reportId, buttonElement) {
+        try {
+            const token = localStorage.getItem('authToken'); // Use correct key
+            if (!token) {
+                alert('You need to log in first.');
+                return;
+            }
+
+            const response = await fetch('http://localhost:4001/api/upvote', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // Use token stored in localStorage
+                },
+                body: JSON.stringify({ reportId })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Update the vote count
+                document.getElementById(`vote-count-${reportId}`).textContent = `Votes: ${data.voteCount}`;
+
+                // Change button text to "Remove Vote" after upvoting
+                buttonElement.textContent = 'Remove Vote';
+                buttonElement.setAttribute('onclick', `removeUpvote(${reportId}, this)`);
+            } else {
+                alert('Error: ' + (data.error || 'Unable to upvote.'));
+            }
+        } catch (error) {
+            console.error('Error upvoting report:', error);
+            alert('An error occurred while upvoting.');
+        }
+    }
+
+    async function removeUpvote(reportId, buttonElement) {
+        try {
+            const token = localStorage.getItem('authToken'); // Use correct key
+            if (!token) {
+                alert('You need to log in first.');
+                return;
+            }
+
+            const response = await fetch('http://localhost:4001/api/upvote/remove-vote', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // Use token stored in localStorage
+                },
+                body: JSON.stringify({ reportId })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Update the vote count
+                document.getElementById(`vote-count-${reportId}`).textContent = `Votes: ${data.voteCount}`;
+
+                // Change button text back to "Upvote"
+                buttonElement.textContent = 'Upvote';
+                buttonElement.setAttribute('onclick', `upvoteReport(${reportId}, this)`);
+            } else {
+                alert('Error: ' + (data.error || 'Unable to remove vote.'));
+            }
+        } catch (error) {
+            console.error('Error removing upvote:', error);
+            alert('An error occurred while removing the upvote.');
+        }
+    }
 
 
         fetchReports();
