@@ -1,31 +1,54 @@
+const CategoryRepository = require('../repositories/category-repository');  // Import the category repository
 const reportService = require('../services/report-service');
+
+const categoryRepository = new CategoryRepository();// Check the available methods
 
 exports.createReport = async (req, res) => {
     console.log('Form Data:', req.body);  // Log body data
     console.log('Uploaded File:', req.file);
+
     try {
-        const { user_id, title, description, category_id, location, google_maps_link, visibility } = req.body;
-        
-        const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
-  // Get image URL if uploaded
+        const { user_id, title, description, category, location, google_maps } = req.body;
+        console.log('Request Body:', req.body); 
+        // Fetch category ID based on the category name
+        const categoryRecord = await categoryRepository.findCategoryByName(category);
+
+        if (!categoryRecord) {
+            return res.status(400).json({ error: 'Category not found' });
+        }
+
+        const category_id = categoryRecord.category_id;  // Use the category ID fetched from the database
+
+        const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;  // Get image URL if uploaded
 
         const report = await reportService.createReport({
             user_id,
             title,
             description,
-            category_id,
+            category_id,  // Use category ID
             location,
-            google_maps_link,
-            visibility,
-        
-            imageUrl,  // Add imageUrl to the report data
+            google_maps_link:google_maps,
+            imageUrl,
         });
+        
 
         res.status(201).json({ message: 'Report created successfully', report });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
+
+
+exports.updateReport = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedReport = await reportService.updateReport(id, req.body);
+        res.status(200).json({ message: 'Report updated successfully', updatedReport });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
 
 exports.getAllReports = async (req, res) => {
     try {
@@ -49,15 +72,7 @@ exports.getReportById = async (req, res) => {
     }
 };
 
-exports.updateReport = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updatedReport = await reportService.updateReport(id, req.body);
-        res.status(200).json({ message: 'Report updated successfully', updatedReport });
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-};
+
 
 exports.deleteReport = async (req, res) => {
     try {

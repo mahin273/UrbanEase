@@ -268,42 +268,42 @@
         }
 
         async function fetchDetails(type) {
-                try {
-                    const userId = getUserIdFromToken();
-                    if (!userId) return;
+            try {
+                const userId = getUserIdFromToken();
+                if (!userId) return;
 
-                    // Show loading indicator when fetching report details
-                    document.getElementById('loading').classList.remove('hidden');
+                // Show loading indicator when fetching report details
+                document.getElementById('loading').classList.remove('hidden');
 
-                    let url = `http://localhost:4001/api/reports/user/${userId}/stats`; // Default URL for total reports
-                    if (type !== 'total') {
-                        url += `?stats=${type}`; // Append the type if it's not 'total' (e.g., pending or resolved)
-                    }
-
-                    const response = await axios.get(url, {
-                        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-                    });
-
-                    // Hide loading after data is fetched
-                    document.getElementById('loading').classList.add('hidden');
-
-                    const detailsContainer = document.getElementById('details-container');
-                    const detailsList = document.getElementById('report-details');
-
-                    if (response.data.reports.length === 0) {
-                        detailsList.innerHTML = `<li>No reports found for this category.</li>`;
-                    } else {
-                        detailsList.innerHTML = response.data.reports.map(report =>
-                            `<li class="py-2 px-4 bg-white rounded-lg mb-2 shadow-md">${report.title} - ${report.status}</li>`
-                        ).join('');
-                    }
-
-                    detailsContainer.classList.remove('hidden');
-                } catch (error) {
-                    console.error('Error fetching report details:', error);
-                    document.getElementById('loading').classList.add('hidden');
+                let url = `http://localhost:4001/api/reports/user/${userId}/stats`; // Default URL for total reports
+                if (type !== 'total') {
+                    url += `?stats=${type}`; // Append the type if it's not 'total' (e.g., pending or resolved)
                 }
+
+                const response = await axios.get(url, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                });
+
+                // Hide loading after data is fetched
+                document.getElementById('loading').classList.add('hidden');
+
+                const detailsContainer = document.getElementById('details-container');
+                const detailsList = document.getElementById('report-details');
+
+                if (response.data.reports.length === 0) {
+                    detailsList.innerHTML = `<li>No reports found for this category.</li>`;
+                } else {
+                    detailsList.innerHTML = response.data.reports.map(report =>
+                        `<li class="py-2 px-4 bg-white rounded-lg mb-2 shadow-md">${report.title} - ${report.status}</li>`
+                    ).join('');
+                }
+
+                detailsContainer.classList.remove('hidden');
+            } catch (error) {
+                console.error('Error fetching report details:', error);
+                document.getElementById('loading').classList.add('hidden');
             }
+        }
 
         // Initial calls to fetch user profile and stats
         fetchUserProfile();

@@ -7,7 +7,8 @@ const categoryRepository = new CategoryRepository();
 const userRepository = new UserRepository();
 
 
-exports.createReport = async ({ user_id, title, description, category_id, location, google_maps_link, visibility, imageUrl }) => {
+exports.createReport = async ({ user_id, title, description, category_id, location, google_maps_link, imageUrl }) => {
+    console.log("Goooooogle: ",google_maps_link)
     const report = await reportRepository.create({
         user_id,
         title,
@@ -15,12 +16,30 @@ exports.createReport = async ({ user_id, title, description, category_id, locati
         category_id,
         location,
         google_maps_link,
-        visibility,
         image_url: imageUrl,  // Save the image URL in the database
     });
 
     return report;
 };
+
+exports.updateReport = async (reportId, { title, description, category_id, location, google_maps_link, imageUrl }) => {
+    const report = await reportRepository.findById(reportId);
+    if (!report) throw new Error('Report not found');
+
+    const updatedReport = await reportRepository.updateById(reportId, {
+        title,
+        description,
+        category_id,
+        location,
+        google_maps_link,
+        image_url: imageUrl,  // Update the image URL if changed
+    });
+
+    if (!updatedReport) throw new Error('Report could not be updated');
+
+    return updatedReport;
+};
+
 
 exports.getAllReports = async () => {
     const reports = await reportRepository.findAllReportsWithDetails();
@@ -106,7 +125,7 @@ exports.getReportById = async (reportId) => {
     return report;
 };
 
-exports.updateReport = async (reportId, { title, description, category_id, location, google_maps_link, visibility, imageUrl }) => {
+exports.updateReport = async (reportId, { title, description, category_id, location, google_maps_link, imageUrl }) => {
     const report = await reportRepository.findById(reportId);
     if (!report) throw new Error('Report not found');
 
@@ -116,7 +135,6 @@ exports.updateReport = async (reportId, { title, description, category_id, locat
         category_id,
         location,
         google_maps_link,
-        visibility,
         image_url: imageUrl,  // Update the image URL if changed
     });
 

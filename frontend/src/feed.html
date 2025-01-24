@@ -93,8 +93,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="google_maps" class="block text-gray-700">Google Maps Link</label>
-                        <input type="url" id="google_maps" name="google_maps" placeholder="Enter Google Maps link"
+                        <label for="google_maps_link" class="block text-gray-700">Google Maps Link</label>
+                        <input type="url" id="google_maps_link" name="google_maps" placeholder="Enter Google Maps link"
                             class="border p-3 w-full rounded-lg">
                     </div>
 
@@ -133,78 +133,158 @@
             }
         });
 
-        async function fetchReports() {
-            try {
-                const response = await fetch('http://localhost:4001/api/reports');
-                const reports = await response.json();
+    async function fetchReports() {
+        try {
+            const response = await fetch('http://localhost:4001/api/reports');
+            const reports = await response.json();
 
-                const reportsContainer = document.querySelector('.feed-reports');
-                reportsContainer.innerHTML = '';
+            const reportsContainer = document.querySelector('.feed-reports');
+            reportsContainer.innerHTML = '';
 
-                reports.forEach(report => {
-                    const reportElement = document.createElement('div');
-                    reportElement.classList.add('mb-8', 'border-b', 'pb-6');
+            const upvotedReports = JSON.parse(localStorage.getItem('upvotedReports')) || [];  // Get upvoted report IDs
 
-                    // Prepend the base URL to the image path
-                    const imageUrl = report.image_url ? `http://localhost:4001${report.image_url}` : 'https://via.placeholder.com/150';
+            reports.forEach(report => {
+                const reportElement = document.createElement('div');
+                reportElement.classList.add('mb-8', 'border-b', 'pb-6');
 
-                    reportElement.innerHTML = `
-                        <h4 class="text-xl font-semibold text-gray-800">${report.username}</h4>
-                        <p class="text-lg text-gray-700">${report.title}</p>
-                        <p class="text-sm text-gray-600">Category: ${report.category_name}</p>
-                        <p class="text-sm text-gray-600">Description: ${report.description}</p>
-                        <p class="text-sm text-gray-600">Location: ${report.location}</p>
-                        <a href="${report.google_maps_link}" class="text-blue-600 hover:underline">View on Google Maps</a>
-                        <img src="${imageUrl}" class="mt-4 rounded-lg" style="width: 800px; height: 400px;">
-                         <div class="mt-4 flex space-x-4">
-                    <button class="text-blue-500 upvote-button" onclick="upvoteReport(${report.report_id}, this)">Upvote</button>
-                    <button class="text-gray-500">Comment</button>
+                const imageUrl = report.image_url ? `http://localhost:4001${report.image_url}` : 'https://via.placeholder.com/150';
+
+                let upvoted = upvotedReports.includes(report.report_id);  // Check if the report is upvoted
+
+                reportElement.innerHTML = `
+                <h4 class="text-xl font-semibold text-gray-800">${report.username}</h4>
+                <p class="text-lg text-gray-700">${report.title}</p>
+                <p class="text-sm text-gray-600">Category: ${report.category_name}</p>
+                <p class="text-sm text-gray-600">Description: ${report.description}</p>
+                <p class="text-sm text-gray-600">Location: ${report.location}</p>
+                <a href="${report.google_maps_link}" class="text-blue-600 hover:underline">View on Google Maps</a>
+                <img src="${imageUrl}" class="mt-4 rounded-lg" style="width: 800px; height: 400px;">
+                <div class="mt-4 flex space-x-4">
+                    <button class="text-blue-500 upvote-button" 
+                            onclick="upvoteReport(${report.report_id}, this)" 
+                            ${upvoted ? 'disabled' : ''}>
+                        ${upvoted ? 'Upvoted' : 'Upvote'}
+                    </button>
+                    <button class="text-gray-500" onclick="toggleCommentForm(${report.report_id})">Comment</button>
                     <span class="ml-4 text-gray-700" id="vote-count-${report.report_id}">
                         Votes: ${report.vote_count !== undefined ? report.vote_count : 0}
                     </span>
                 </div>
-                    `;
+                <div class="comment-section" id="comment-section-${report.report_id}" style="display: none;">
+                    <textarea id="comment-text-${report.report_id}" class="border p-2 w-full rounded-lg" placeholder="Add a comment..."></textarea>
+                    <button class="form-button mt-2" onclick="addComment(${report.report_id})">Submit Comment</button>
+                    <div class="comments-list" id="comments-list-${report.report_id}">
+                    </div>
+                </div>
+            `;
 
-                    reportsContainer.appendChild(reportElement);
-                });
-            } catch (error) {
-                console.error('Error fetching reports:', error);
-            }
-        }
-    async function upvoteReport(reportId, buttonElement) {
-        try {
-            const token = localStorage.getItem('authToken'); // Use correct key
-            if (!token) {
-                alert('You need to log in first.');
-                return;
-            }
-
-            const response = await fetch('http://localhost:4001/api/upvote', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`, // Use token stored in localStorage
-                },
-                body: JSON.stringify({ reportId })
+                reportsContainer.appendChild(reportElement);
             });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                // Update the vote count
-                document.getElementById(`vote-count-${reportId}`).textContent = `Votes: ${data.voteCount}`;
-
-                // Change button text to "Remove Vote" after upvoting
-                buttonElement.textContent = 'Remove Vote';
-                buttonElement.setAttribute('onclick', `removeUpvote(${reportId}, this)`);
-            } else {
-                alert('Error: ' + (data.error || 'Unable to upvote.'));
-            }
         } catch (error) {
-            console.error('Error upvoting report:', error);
-            alert('An error occurred while upvoting.');
+            console.error('Error fetching reports:', error);
         }
     }
+
+        document.getElementById('reportForm').addEventListener('submit', async function (event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+
+                const token = localStorage.getItem('authToken'); // Get the JWT token
+
+                if (!token) {
+                    alert('You need to log in first.');
+                    return;
+                }
+
+                try {
+                    // Decode JWT to get user_id (assuming JWT is in the standard format)
+                    const payload = JSON.parse(atob(token.split('.')[1])); // Decode token to get payload
+                    const user_id = payload.id;  // Correct field is 'id' instead of 'user_id'
+
+                    if (!user_id) {
+                        alert('Invalid user session. Please log in again.');
+                        return;
+                    }
+
+                    // Get category_id from the selected option
+                    const categorySelect = document.getElementById('category');
+                    const category_id = categorySelect.value;
+
+                    if (!category_id) {
+                        alert('Please select a category.');
+                        return;
+                    }
+
+                    // Append required fields to formData
+                    formData.append('user_id', user_id);
+                    formData.append('category_id', category_id);
+
+                    const response = await fetch('http://localhost:4001/api/reports/create', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}` // Add the token to the request header
+                        },
+                        body: formData,
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Report created successfully:', data);
+                        fetchReports(); // Reload the reports
+                        alert('Report created successfully.');
+                    } else {
+                        const data = await response.json();
+                        console.log("Data: ",data)
+                        console.error('Error creating report:', data.error);
+                        alert('Error: ' + (data.error || 'Unable to create report.'));
+                    }
+                } catch (error) {
+                    console.error('Error creating report:', error);
+                    alert('An error occurred while submitting the report.');
+                }
+            });
+
+
+
+    async function upvoteReport(reportId, buttonElement) {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    alert('You need to log in first.');
+                    return;
+                }
+
+                const response = await fetch('http://localhost:4001/api/upvote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ reportId })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Update the vote count
+                    document.getElementById(`vote-count-${reportId}`).textContent = `Votes: ${data.voteCount}`;
+
+                    // Store the upvoted report ID in localStorage
+                    let upvotedReports = JSON.parse(localStorage.getItem('upvotedReports')) || [];
+                    upvotedReports.push(reportId);
+                    localStorage.setItem('upvotedReports', JSON.stringify(upvotedReports));
+
+                    // Change button text to "Upvoted" and disable it
+                    buttonElement.textContent = 'Upvoted';
+                    buttonElement.disabled = true;
+                } else {
+                    alert('Error: ' + (data.error || 'Unable to upvote.'));
+                }
+            } catch (error) {
+                console.error('Error upvoting report:', error);
+                alert('An error occurred while upvoting.');
+            }
+        }
 
     async function removeUpvote(reportId, buttonElement) {
         try {
@@ -240,9 +320,80 @@
             alert('An error occurred while removing the upvote.');
         }
     }
+    function toggleCommentForm(reportId) {
+            const commentSection = document.getElementById(`comment-section-${reportId}`);
+            commentSection.style.display = commentSection.style.display === 'none' ? 'block' : 'none';
+
+            // Fetch existing comments when the form is opened
+            if (commentSection.style.display === 'block') {
+                fetchComments(reportId);
+            }
+        }
+
+        async function addComment(reportId) {
+                const commentText = document.getElementById(`comment-text-${reportId}`).value;
+                const token = localStorage.getItem('authToken');
+
+                if (!token) {
+                    alert('You need to log in first.');
+                    return;
+                }
+
+                if (!commentText) {
+                    alert('Please enter a comment.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`http://localhost:4001/api/reports/${reportId}/comments`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ commentText }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        document.getElementById(`comment-text-${reportId}`).value = '';  // Clear the comment box
+                        fetchComments(reportId);  // Refresh comments
+                    } else {
+                        alert('Error adding comment: ' + (data.error || 'Unknown error.'));
+                    }
+                } catch (error) {
+                    console.error('Error adding comment:', error);
+                    alert('An error occurred while adding the comment.');
+                }
+            }
+
+            async function fetchComments(reportId) {
+                    try {
+                        const response = await fetch(`http://localhost:4001/api/reports/${reportId}/comments`);
+                        const data = await response.json();
+
+                        const commentsList = document.getElementById(`comments-list-${reportId}`);
+                        commentsList.innerHTML = '';  // Clear existing comments
+
+                        data.comments.forEach(comment => {
+                            const commentElement = document.createElement('div');
+                            commentElement.classList.add('comment', 'my-2');
+                            commentElement.innerHTML = `
+                <div class="text-sm text-gray-700">${comment.username}</div>
+                <div class="text-sm text-gray-600">${comment.comment_text}</div>
+            `;
+                            commentsList.appendChild(commentElement);
+                        });
+                    } catch (error) {
+                        console.error('Error fetching comments:', error);
+                    }
+                }
+
 
 
         fetchReports();
+              
     </script>
 </body>
 

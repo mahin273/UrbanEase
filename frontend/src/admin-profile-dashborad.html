@@ -4,83 +4,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User & Admin Profile & Dashboard</title>
+    <title>User Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="auth.js"></script>
 </head>
 
 <body class="bg-gray-100 py-10">
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Profile</h2>
-        <div class="flex items-center space-x-4 mb-6">
-            <img src="https://via.placeholder.com/100" alt="Profile Picture" class="w-24 h-24 rounded-full border">
+    <div class="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md">
+        <!-- Profile Section -->
+        <div class="flex items-center mb-6">
+            <img id="profile-picture" class="w-16 h-16 rounded-full mr-4" src="" alt="Profile Picture">
             <div>
-                <h3 class="text-xl font-semibold text-gray-700">User Name</h3>
-                <p class="text-gray-500">username@example.com</p>
+                <h3 id="user-name" class="text-xl font-semibold text-gray-700">Loading...</h3>
+                <p id="user-email" class="text-sm text-gray-500">Loading...</p>
             </div>
         </div>
-        <div class="grid grid-cols-2 gap-4">
-            <div><strong>First Name:</strong> John</div>
-            <div><strong>Last Name:</strong> Doe</div>
-            <div><strong>NID Number:</strong> 123456789</div>
-            <div><strong>Email:</strong> john.doe@example.com</div>
-            <div>
-                <label for="phone" class="font-bold">Phone Number:</label>
-                <input type="text" id="phone" placeholder="Enter phone number" class="border p-2 w-full rounded">
-            </div>
-            <div>
-                <label for="gender" class="font-bold">Gender:</label>
-                <input type="text" id="gender" placeholder="Enter gender" class="border p-2 w-full rounded">
-            </div>
-            <div>
-                <label for="dob" class="font-bold">DOB:</label>
-                <input type="date" id="dob" class="border p-2 w-full rounded">
-            </div>
-            <div>
-                <label for="city" class="font-bold">City:</label>
-                <input type="text" id="city" placeholder="Enter city" class="border p-2 w-full rounded">
-            </div>
-            <div>
-                <label for="postcode" class="font-bold">Post Code:</label>
-                <input type="text" id="postcode" placeholder="Enter post code" class="border p-2 w-full rounded">
+
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Admin Dashboard</h2>
+
+        <!-- Profile Information -->
+        <div class="space-y-4">
+            <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700">Profile Information</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700">First Name</label>
+                        <input type="text" id="firstname" class="text-gray-900 border p-2 rounded"
+                            placeholder="First Name">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Last Name</label>
+                        <input type="text" id="lastname" class="text-gray-900 border p-2 rounded"
+                            placeholder="Last Name">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Username</label>
+                        <p id="username" class="text-gray-900">Loading...</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">NID Number</label>
+                        <p id="nid-num" class="text-gray-900">Loading...</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Email</label>
+                        <p id="email" class="text-gray-900">Loading...</p>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Date of Birth</label>
+                        <input type="text" id="dob" class="text-gray-900 border p-2 rounded"
+                            placeholder="Enter Date of Birth (YYYY-MM-DD)" value="Not filled">
+                    </div>
+                    <!-- Optional fields (editable later) -->
+                    <div>
+                        <label class="block text-gray-700">Gender</label>
+                        <select id="gender" class="text-gray-900 border p-2 rounded">
+                            <option value="Not filled">Not filled</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Phone Number</label>
+                        <input type="text" id="phone-num" class="text-gray-900 border p-2 rounded"
+                            placeholder="Enter Phone Number" value="Not filled">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">City</label>
+                        <input type="text" id="city" class="text-gray-900 border p-2 rounded" placeholder="Enter City"
+                            value="Not filled">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Postal Code</label>
+                        <input type="text" id="postal-code" class="text-gray-900 border p-2 rounded"
+                            placeholder="Enter Postal Code" value="Not filled">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Profile Picture</label>
+                        <input type="file" id="profile-picture-input" class="text-gray-900 border p-2 rounded">
+                    </div>
+                </div>
+
+                <!-- Save Changes Button -->
+                <div class="mt-4 text-center">
+                    <button id="save-profile-btn" class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">Save
+                        Changes</button>
+                </div>
             </div>
         </div>
-        <button class="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Update Profile</button>
+
+        <!-- Dashboard Stats Section -->
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Admin Dashboard</h2>
+    <div class="grid grid-cols-2 gap-4 text-center">
+        <div class="p-4 border rounded-lg shadow-md">
+            <h3 class="text-xl font-bold text-gray-700">Total Submitted Problems</h3>
+            <p class="text-gray-600">50</p>
+        </div>
+        <div class="p-4 border rounded-lg shadow-md">
+            <h3 class="text-xl font-bold text-gray-700">Total Submitted Reports</h3>
+            <p class="text-gray-600">20</p>
+        </div>
+        <div class="p-4 border rounded-lg shadow-md">
+            <h3 class="text-xl font-bold text-gray-700">Total New Submitted report</h3>
+            <p class="text-gray-600">20</p>
+        </div>
+        <div class="p-4 border rounded-lg shadow-md">
+            <h3 class="text-xl font-bold text-gray-700">Total In Progress Reports</h3>
+            <p class="text-gray-600">10</p>
+        </div>
+        <div class="p-4 border rounded-lg shadow-md">
+            <h3 class="text-xl font-bold text-gray-700">Total Resolved Reports</h3>
+            <p class="text-gray-600">10</p>
+        </div>
+        <div class="p-4 border rounded-lg shadow-md">
+            <h3 class="text-xl font-bold text-gray-700">Assigned Staff</h3>
+            <p class="text-gray-600">5</p>
+        </div>
+        <div class="p-4 border rounded-lg shadow-md">
+            <h3 class="text-xl font-bold text-gray-700">Available Staff</h3>
+            <p class="text-gray-600">3</p>
+        </div>
+        <div class="p-4 border rounded-lg shadow-md">
+            <h3 class="text-xl font-bold text-gray-700">Problems Near Deadline</h3>
+            <p class="text-gray-600">7</p>
+        </div>
+        <div class="p-4 border rounded-lg shadow-md col-span-2">
+            <h3 class="text-xl font-bold text-gray-700">Category Wise Problem</h3>
+            <p class="text-gray-600">Environmental Issue: 15, Transportation: 25, Others: 10</p>
+        </div>
     </div>
 
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
-        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Admin Dashboard</h2>
-        <div class="grid grid-cols-2 gap-4 text-center">
-            <div class="p-4 border rounded-lg shadow-md">
-                <h3 class="text-xl font-bold text-gray-700">Total Submitted Problems</h3>
-                <p class="text-gray-600">50</p>
+    <!-- Assign Report to Staff Section -->
+    <div class="mt-8 p-6 border rounded-lg shadow-md bg-gray-50">
+        <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Assign Report to Staff</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="report" class="block text-gray-700 font-medium mb-2">Select Report:</label>
+                <select id="report" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">-- Select a Report --</option>
+                    <option value="report1">Report 1</option>
+                    <option value="report2">Report 2</option>
+                    <option value="report3">Report 3</option>
+                </select>
             </div>
-            <div class="p-4 border rounded-lg shadow-md">
-                <h3 class="text-xl font-bold text-gray-700">Total New Submitted Problems</h3>
-                <p class="text-gray-600">20</p>
-            </div>
-            <div class="p-4 border rounded-lg shadow-md">
-                <h3 class="text-xl font-bold text-gray-700">Total In Progress</h3>
-                <p class="text-gray-600">10</p>
-            </div>
-            <div class="p-4 border rounded-lg shadow-md">
-                <h3 class="text-xl font-bold text-gray-700">Assigned Staff</h3>
-                <p class="text-gray-600">5</p>
-            </div>
-            <div class="p-4 border rounded-lg shadow-md">
-                <h3 class="text-xl font-bold text-gray-700">Free Staff</h3>
-                <p class="text-gray-600">3</p>
-            </div>
-            <div class="p-4 border rounded-lg shadow-md">
-                <h3 class="text-xl font-bold text-gray-700">Problems Near Deadline</h3>
-                <p class="text-gray-600">7</p>
-            </div>
-            <div class="p-4 border rounded-lg shadow-md">
-                <h3 class="text-xl font-bold text-gray-700">Category Wise Problem</h3>
-                <p class="text-gray-600">Hardware: 15, Software: 25, Network: 10</p>
+            <div>
+                <label for="staff" class="block text-gray-700 font-medium mb-2">Select Staff:</label>
+                <select id="staff" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">-- Select a Staff Member --</option>
+                    <option value="staff1">Staff 1</option>
+                    <option value="staff2">Staff 2</option>
+                    <option value="staff3">Staff 3</option>
+                </select>
             </div>
         </div>
-        <button class="mt-6 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">Assign Work to Staff</button>
+        <div class="text-center mt-6">
+            <button class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-700">
+                Assign Task
+            </button>
+        </div>
     </div>
+</div>
+
+
+        <!-- Loading Spinner -->
+        <div id="loading" class="hidden text-center mt-6">
+            <span class="text-gray-700">Loading...</span>
+        </div>
+
+        <!-- Report Details Section -->
+        <div id="details-container" class="hidden mt-6 p-4 bg-gray-200 rounded-lg shadow-md">
+            <h3 class="text-xl font-semibold text-gray-700">Report Details</h3>
+            <ul id="report-details" class="text-gray-800 mt-2"></ul>
+        </div>
+    </div>
+
+    <script>
+        function getUserIdFromToken() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                console.error('No auth token found in localStorage');
+                return null;
+            }
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                return payload.id;
+            } catch (error) {
+                console.error('Error decoding token:', error);
+                return null;
+            }
+        }
+
+        async function fetchUserProfile() {
+            try {
+                const userId = getUserIdFromToken();
+                if (!userId) return;
+
+                // Show loading text
+                document.getElementById('user-name').textContent = 'Loading...';
+                document.getElementById('user-email').textContent = 'Loading...';
+
+                // Fetch user profile info
+                const response = await axios.get(`http://localhost:4001/api/users/${userId}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                });
+
+
+                // Update profile details
+
+                document.getElementById('firstname').value = response.data.firstname;
+                document.getElementById('lastname').value = response.data.lastname;
+                document.getElementById('username').textContent = response.data.username;
+                document.getElementById('nid-num').textContent = response.data.nid_num;
+                document.getElementById('email').textContent = response.data.email;
+                document.getElementById('dob').value = response.data.dob || 'Not filled';
+                document.getElementById('gender').value = response.data.gender || 'Not filled';
+                document.getElementById('phone-num').value = response.data.phone_num || 'Not filled';
+                document.getElementById('city').value = response.data.city || 'Not filled';
+                document.getElementById('postal-code').value = response.data.postal_code || 'Not filled';
+
+                // Set profile picture
+                const profilePicUrl = `http://localhost:4001${response.data.profile_picture}`;
+                document.getElementById('profile-picture').src = profilePicUrl;
+
+                // Set user name and email
+                document.getElementById('user-name').textContent = `${response.data.firstname} ${response.data.lastname}`;
+                document.getElementById('user-email').textContent = response.data.email;
+
+                // Log profile picture URL
+                console.log('Profile Picture URL:', profilePicUrl);
+
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+            }
+        }
+
+        async function saveUserProfile() {
+            try {
+                const userId = getUserIdFromToken();
+                if (!userId) return;
+
+                const firstName = document.getElementById('firstname').value;  // Default to an empty string if empty
+                const lastName = document.getElementById('lastname').value;    // Default to an empty string if empty
+                const gender = document.getElementById('gender').value.trim();
+                const phoneNum = document.getElementById('phone-num').value.trim();
+                const city = document.getElementById('city').value.trim();
+                const postalCode = document.getElementById('postal-code').value.trim();
+                const dob = document.getElementById('dob').value.trim();
+
+                // Ensure required fields are not empty
+                if (!firstName || !lastName) {
+                    alert('First Name and Last Name are required.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('firstname', firstName);  // Verify the backend expects 'first_name'
+                formData.append('lastname', lastName);      // Verify the backend expects 'last_name'
+                console.log("First Name:", firstName);
+                console.log("Last Name:", lastName);
+                formData.append('gender', gender || 'Not filled');
+                formData.append('phone_num', phoneNum || 'Not filled');
+                formData.append('city', city || 'Not filled');
+                formData.append('postal_code', postalCode || 'Not filled');
+                formData.append('dob', dob || 'Not filled');
+                console.log("Formdata is: ", [...formData]);
+                // Check if a profile picture was uploaded
+                const profilePicture = document.getElementById('profile-picture-input').files[0];
+                if (profilePicture) {
+                    formData.append('profile_picture', profilePicture);
+                }
+
+                // Debug: log formData to ensure everything is set properly
+                console.log([...formData]); // This will show all the key-value pairs
+
+                // Send the updated data to the server
+                await axios.patch(`http://localhost:4001/api/users/${userId}`, formData, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                alert('Profile updated successfully!');
+                fetchUserProfile(); // Refresh profile details after saving
+            } catch (error) {
+                console.error('Error updating profile:', error);
+            }
+        }
+
+
+        // Save profile when the button is clicked
+        document.getElementById('save-profile-btn').addEventListener('click', saveUserProfile);
+
+        async function fetchUserStats() {
+            try {
+                const userId = getUserIdFromToken();
+                if (!userId) return;
+
+                // Show loading indicator
+                document.getElementById('loading').classList.remove('hidden');
+
+                const response = await axios.get(`http://localhost:4001/api/reports/user/${userId}/stats`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                });
+
+
+                // Hide loading after data is fetched
+                document.getElementById('loading').classList.add('hidden');
+
+                document.getElementById('total-reports').textContent = response.data.stats.total;
+                document.getElementById('pending-problems').textContent = response.data.stats.pending;
+                document.getElementById('resolved-problems').textContent = response.data.stats.resolved;
+            } catch (error) {
+                console.error('Error fetching user stats:', error);
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+
+        async function fetchDetails(type) {
+            try {
+                const userId = getUserIdFromToken();
+                if (!userId) return;
+
+                // Show loading indicator when fetching report details
+                document.getElementById('loading').classList.remove('hidden');
+
+                let url = `http://localhost:4001/api/reports/user/${userId}/stats`; // Default URL for total reports
+                if (type !== 'total') {
+                    url += `?stats=${type}`; // Append the type if it's not 'total' (e.g., pending or resolved)
+                }
+
+                const response = await axios.get(url, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                });
+
+                // Hide loading after data is fetched
+                document.getElementById('loading').classList.add('hidden');
+
+                const detailsContainer = document.getElementById('details-container');
+                const detailsList = document.getElementById('report-details');
+
+                if (response.data.reports.length === 0) {
+                    detailsList.innerHTML = `<li>No reports found for this category.</li>`;
+                } else {
+                    detailsList.innerHTML = response.data.reports.map(report =>
+                        `<li class="py-2 px-4 bg-white rounded-lg mb-2 shadow-md">${report.title} - ${report.status}</li>`
+                    ).join('');
+                }
+
+                detailsContainer.classList.remove('hidden');
+            } catch (error) {
+                console.error('Error fetching report details:', error);
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+
+        // Initial calls to fetch user profile and stats
+        fetchUserProfile();
+        fetchUserStats();
+    </script>
 </body>
 
 </html>

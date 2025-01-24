@@ -6,9 +6,7 @@ function validateReportInput(req, res, next) {
     const missingFields = [];
     if (!title) missingFields.push('title');
     if (!description) missingFields.push('description');
-    if (!category_id) missingFields.push('category_id');
-    if (!visibility) missingFields.push('visibility');
-    
+    if (!category_id) missingFields.push('category_id'); 
     if (!user_id) missingFields.push('user_id');
 
     if (missingFields.length > 0) {

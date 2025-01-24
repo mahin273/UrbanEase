@@ -8,7 +8,6 @@ const reportModel = {
         category_id: 'INT NOT NULL', // Foreign key to categories table
         location: 'VARCHAR(255)',
         google_maps_link: 'VARCHAR(2083)',
-        visibility: "ENUM('Public', 'Private') DEFAULT 'Public'",
         status: "ENUM('New', 'In Progress', 'Resolved') DEFAULT 'New'",
         user_id: 'INT NOT NULL',
         image_url: 'VARCHAR(255)', // Store image URL
