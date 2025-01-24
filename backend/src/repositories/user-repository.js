@@ -19,6 +19,22 @@ class UserRepository extends CrudRepository {
         return await this.findOneBy('nid_num', nid_num);
     }
 
+ 
+    async updateById(id, updatedData) {
+        const { firstname, lastname, username, phone_num, gender, city, postal_code, profile_picture } = updatedData;
+
+        const query = `
+            UPDATE ${userModel.tableName}
+            SET firstname = ?, lastname = ?, username = ?, phone_num = ?, gender = ?, city = ?, postal_code = ?, profile_picture = ?
+            WHERE user_id = ?
+        `;
+
+        const [result] = await db.query(query, [firstname, lastname, username, phone_num, gender, city, postal_code, profile_picture, id]);
+        return result.affectedRows > 0 ? await this.findById(id) : null;
+    }
+
+
+
     async updatePasswordResetToken(email, token, expires) {
         const query = `
             UPDATE ${userModel.tableName}

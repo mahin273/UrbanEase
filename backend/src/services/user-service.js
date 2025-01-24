@@ -37,6 +37,43 @@ exports.getAllUsers = async () => {
     return await userRepository.findAll();
 };
 
+// Add this method to user-service.js
+exports.getUserById = async (id) => {
+    const user = await userRepository.findById(id);
+    if (!user) {
+        throw new Error('User not found');
+    }
+    return user;
+};
+
+exports.updateUser = async (id, updatedData) => {
+    try {
+        const user = await userRepository.findById(id);
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Filter out undefined or null values from the updatedData
+        const sanitizedData = Object.fromEntries(
+            Object.entries(updatedData).filter(([_, v]) => v != null)
+        );
+
+        // Update user information with the provided data
+        const updatedUser = await userRepository.updateById(id, sanitizedData);
+
+        if (!updatedUser) {
+            throw new Error('Failed to update user');
+        }
+
+        return updatedUser;
+    } catch (error) {
+        console.error('Error updating user:', error);
+        throw error;
+    }
+};
+
+
+
 exports.deleteUserById = async (id) => {
     const isDeleted = await userRepository.deleteById(id);
     if (!isDeleted) throw new Error('User not found or could not be deleted');

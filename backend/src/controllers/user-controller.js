@@ -17,6 +17,49 @@ exports.getAllUsers = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+// Add this method to user-controller.js
+exports.getUserById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await userService.getUserById(id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.updateUser = async (req, res) => {
+    const { id } = req.params;
+    const { firstname, lastname, username, phone_num, gender, city, postal_code, profile_picture } = req.body;
+    console.log('Request Body:', req.body);
+
+    try {
+        // Validate the input data (for required fields)
+        if (!firstname || !lastname || !username) {
+            return res.status(400).json({ error: 'Firstname, lastname, and username are required' });
+        }
+
+        // Update user with the provided data
+        const updatedUser = await userService.updateUser(id, { firstname, lastname, username, phone_num, gender, city, postal_code, profile_picture });
+
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+    } catch (error) {
+        console.error('Update user error:', error);
+        res.status(400).json({ error: error.message });
+    }
+};
+
+
+
 
 exports.deleteUser = async (req, res) => {
     try {
@@ -49,6 +92,7 @@ exports.forgotPassword = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
 
 
 exports.resetPassword = async (req, res) => {
