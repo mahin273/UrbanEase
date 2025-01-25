@@ -38,6 +38,24 @@ exports.createReport = async (req, res) => {
     }
 };
 
+// report-controller.js
+
+exports.getReportStats = async (req, res) => {
+    try {
+        const stats = await reportService.getReportStatistics();
+        res.status(200).json({
+            totalReports: stats.totalReports,
+            newReports: stats.newReports,
+            pendingReports: stats.pendingReports,
+            resolvedReports: stats.resolvedReports,
+            categoryReports: stats.categoryReports
+        });
+    } catch (error) {
+        console.error('Error fetching report stats:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 
 exports.updateReport = async (req, res) => {
     try {
@@ -101,5 +119,24 @@ exports.getReportStatsByStatus = async (req, res) => {
     }
 };
 
+
+exports.assignWorkToStaff = async (req, res) => {
+    try {
+        const { reportId, staffId } = req.body;
+
+        // Validate input
+        if (!reportId || !staffId) {
+            return res.status(400).json({ error: 'Report ID and Staff ID are required' });
+        }
+
+        // Call the service to assign the task
+        const result = await reportService.assignWorkToStaff(reportId, staffId);
+
+        res.status(200).json({ message: 'Work assigned successfully', result });
+    } catch (error) {
+        console.error('Error assigning work:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
 
 

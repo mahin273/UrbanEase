@@ -112,6 +112,38 @@ exports.getAllReportsByUserId = async (userId) => {
     return reports;
 };
 
+// report-service.js
+
+exports.getReportStatistics = async () => {
+    try {
+        let totalReports = 0;
+        let newReports = 0;
+        let pendingReports = 0;
+        let resolvedReports = 0;
+
+        // Fetch total number of reports
+        totalReports = await reportRepository.countAllReports();
+
+        // Fetch reports by status
+        newReports = await reportRepository.countByStatus('new');
+        pendingReports = await reportRepository.countByStatus('pending');
+        resolvedReports = await reportRepository.countByStatus('resolved');
+
+        // Fetch category-wise reports
+        const categoryReports = await reportRepository.countReportsByCategory();
+
+        return {
+            totalReports,
+            newReports,
+            pendingReports,
+            resolvedReports,
+            categoryReports
+        };
+    } catch (error) {
+        console.error('Error fetching report stats:', error);
+        throw error;
+    }
+};
 
 
 
@@ -147,4 +179,20 @@ exports.deleteReportById = async (reportId) => {
     const isDeleted = await reportRepository.deleteById(reportId);
     if (!isDeleted) throw new Error('Report not found or could not be deleted');
     return true;
+};
+
+
+exports.assignWorkToStaff = async (reportId, staffId) => {
+    // Find the report by ID
+    const report = await reportRepository.findById(reportId);
+    if (!report) throw new Error('Report not found');
+
+    // Update the report with the assigned staff ID
+    const updatedReport = await reportRepository.updateById(reportId, {
+        staff_id: staffId,  // Assuming your report model has a staff_id field
+    });
+
+    if (!updatedReport) throw new Error('Work assignment failed');
+
+    return updatedReport;
 };

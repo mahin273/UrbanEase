@@ -19,10 +19,11 @@ const upload = multer({ storage: storage });
 
 // Define report routes
 router.post('/create', upload.single('file'), reportMiddleware.validateReportInput, reportController.createReport); // Add upload middleware
+router.get('/stats', reportController.getReportStats);
 router.get('/', reportController.getAllReports);
 router.get('/:id', reportController.getReportById);
 router.put('/:id', reportController.updateReport);
 router.delete('/:id', reportController.deleteReport);
 router.get('/user/:userId/stats', reportController.getReportStatsByStatus);
-
+router.post('/assign', reportController.assignWorkToStaff);
 module.exports = router;

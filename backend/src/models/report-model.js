@@ -10,6 +10,7 @@ const reportModel = {
         google_maps_link: 'VARCHAR(2083)',
         status: "ENUM('New', 'In Progress', 'Resolved') DEFAULT 'New'",
         user_id: 'INT NOT NULL',
+        staff_id: 'INT',
         image_url: 'VARCHAR(255)', // Store image URL
         created_at: 'DATETIME DEFAULT CURRENT_TIMESTAMP',
         updated_at: 'DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',

@@ -94,77 +94,114 @@
         </div>
 
         <!-- Dashboard Stats Section -->
-<div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
-    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Admin Dashboard</h2>
-    <div class="grid grid-cols-2 gap-4 text-center">
-        <div class="p-4 border rounded-lg shadow-md">
-            <h3 class="text-xl font-bold text-gray-700">Total Submitted Problems</h3>
-            <p class="text-gray-600">50</p>
+<div class="container mx-auto p-6">
+    <!-- Overall Statistics -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Total Reports -->
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-xl font-semibold text-gray-700">Total Reports</h3>
+            <p class="text-gray-600 text-2xl font-semibold total-reports">Loading...</p>
         </div>
-        <div class="p-4 border rounded-lg shadow-md">
-            <h3 class="text-xl font-bold text-gray-700">Total Submitted Reports</h3>
-            <p class="text-gray-600">20</p>
+
+        <!-- New Reports -->
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-xl font-semibold text-gray-700">New Reports</h3>
+            <p class="text-gray-600 text-2xl font-semibold new-reports">Loading...</p>
         </div>
-        <div class="p-4 border rounded-lg shadow-md">
-            <h3 class="text-xl font-bold text-gray-700">Total New Submitted report</h3>
-            <p class="text-gray-600">20</p>
+
+        <!-- Pending Reports -->
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-xl font-semibold text-gray-700">Pending Reports</h3>
+            <p class="text-gray-600 text-2xl font-semibold pending-reports">Loading...</p>
         </div>
-        <div class="p-4 border rounded-lg shadow-md">
-            <h3 class="text-xl font-bold text-gray-700">Total In Progress Reports</h3>
-            <p class="text-gray-600">10</p>
-        </div>
-        <div class="p-4 border rounded-lg shadow-md">
-            <h3 class="text-xl font-bold text-gray-700">Total Resolved Reports</h3>
-            <p class="text-gray-600">10</p>
-        </div>
-        <div class="p-4 border rounded-lg shadow-md">
-            <h3 class="text-xl font-bold text-gray-700">Assigned Staff</h3>
-            <p class="text-gray-600">5</p>
-        </div>
-        <div class="p-4 border rounded-lg shadow-md">
-            <h3 class="text-xl font-bold text-gray-700">Available Staff</h3>
-            <p class="text-gray-600">3</p>
-        </div>
-        <div class="p-4 border rounded-lg shadow-md">
-            <h3 class="text-xl font-bold text-gray-700">Problems Near Deadline</h3>
-            <p class="text-gray-600">7</p>
-        </div>
-        <div class="p-4 border rounded-lg shadow-md col-span-2">
-            <h3 class="text-xl font-bold text-gray-700">Category Wise Problem</h3>
-            <p class="text-gray-600">Environmental Issue: 15, Transportation: 25, Others: 10</p>
+
+        <!-- Resolved Reports -->
+        <div class="bg-white p-4 rounded-lg shadow-md">
+            <h3 class="text-xl font-semibold text-gray-700">Resolved Reports</h3>
+            <p class="text-gray-600 text-2xl font-semibold resolved-reports">Loading...</p>
         </div>
     </div>
 
-    <!-- Assign Report to Staff Section -->
-    <div class="mt-8 p-6 border rounded-lg shadow-md bg-gray-50">
-        <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center">Assign Report to Staff</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label for="report" class="block text-gray-700 font-medium mb-2">Select Report:</label>
-                <select id="report" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                    <option value="">-- Select a Report --</option>
-                    <option value="report1">Report 1</option>
-                    <option value="report2">Report 2</option>
-                    <option value="report3">Report 3</option>
-                </select>
+    <!-- Category-wise Problems Section -->
+    <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-4">Category-wise Problems</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Public Safety -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700">Public Safety</h3>
+                <p class="text-gray-600 text-2xl font-semibold category-public-safety">0</p>
             </div>
-            <div>
-                <label for="staff" class="block text-gray-700 font-medium mb-2">Select Staff:</label>
-                <select id="staff" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                    <option value="">-- Select a Staff Member --</option>
-                    <option value="staff1">Staff 1</option>
-                    <option value="staff2">Staff 2</option>
-                    <option value="staff3">Staff 3</option>
-                </select>
+
+            <!-- Infrastructure -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700">Infrastructure</h3>
+                <p class="text-gray-600 text-2xl font-semibold category-infrastructure">0</p>
             </div>
-        </div>
-        <div class="text-center mt-6">
-            <button class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-700">
-                Assign Task
-            </button>
+
+            <!-- Environmental Issues -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700">Environmental Issues</h3>
+                <p class="text-gray-600 text-2xl font-semibold category-environmental">0</p>
+            </div>
+
+            <!-- Crime and Law -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700">Crime and Law</h3>
+                <p class="text-gray-600 text-2xl font-semibold category-crime-law">0</p>
+            </div>
+
+            <!-- Transportation -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700">Transportation</h3>
+                <p class="text-gray-600 text-2xl font-semibold category-transportation">0</p>
+            </div>
+
+            <!-- Emergency Services -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700">Emergency Services</h3>
+                <p class="text-gray-600 text-2xl font-semibold category-emergency-services">0</p>
+            </div>
+
+            <!-- Utilities -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700">Utilities</h3>
+                <p class="text-gray-600 text-2xl font-semibold category-utilities">0</p>
+            </div>
+
+            <!-- Others -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold text-gray-700">Others</h3>
+                <p class="text-gray-600 text-2xl font-semibold category-others">0</p>
+            </div>
         </div>
     </div>
 </div>
+
+
+
+
+
+    <!-- Assign Report to Staff Section -->
+<div class="max-w-6xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Assign Work to Staff</h2>
+    <div class="mb-6">
+        <label for="report-id" class="block text-gray-700 font-bold mb-2">Enter Report ID:</label>
+        <input type="text" id="report-id" class="border p-2 w-full rounded">
+    </div>
+    <div class="mb-6">
+        <label for="staff-id" class="block text-gray-700 font-bold mb-2">Enter Staff ID:</label>
+        <input type="text" id="staff-id" class="border p-2 w-full rounded">
+    </div>
+    <div class="text-center">
+        <button onclick="assignWork()"
+            class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Assign</button>
+    </div>
+    <a href="index.html"
+        class="mt-6 bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 inline-block text-center">Back to
+        Dashboard</a>
+</div>
+
+
 
 
         <!-- Loading Spinner -->
@@ -297,30 +334,6 @@
         // Save profile when the button is clicked
         document.getElementById('save-profile-btn').addEventListener('click', saveUserProfile);
 
-        async function fetchUserStats() {
-            try {
-                const userId = getUserIdFromToken();
-                if (!userId) return;
-
-                // Show loading indicator
-                document.getElementById('loading').classList.remove('hidden');
-
-                const response = await axios.get(`http://localhost:4001/api/reports/user/${userId}/stats`, {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-                });
-
-
-                // Hide loading after data is fetched
-                document.getElementById('loading').classList.add('hidden');
-
-                document.getElementById('total-reports').textContent = response.data.stats.total;
-                document.getElementById('pending-problems').textContent = response.data.stats.pending;
-                document.getElementById('resolved-problems').textContent = response.data.stats.resolved;
-            } catch (error) {
-                console.error('Error fetching user stats:', error);
-                document.getElementById('loading').classList.add('hidden');
-            }
-        }
 
         async function fetchDetails(type) {
             try {
@@ -362,7 +375,95 @@
 
         // Initial calls to fetch user profile and stats
         fetchUserProfile();
-        fetchUserStats();
+
+        async function fetchDashboardStats() {
+                try {
+                    // Fetch dashboard stats from your API
+                    const response = await axios.get('http://localhost:4001/api/reports/stats', {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                    });
+
+                    // Assuming the response has this structure:
+                    const data = response.data;
+
+                    // Update the DOM with the response data
+                    document.querySelector('.total-reports').textContent = data.totalReports;
+                    document.querySelector('.new-reports').textContent = data.newReports;
+                    document.querySelector('.pending-reports').textContent = data.pendingReports;
+                    document.querySelector('.resolved-reports').textContent = data.resolvedReports;
+
+                    // Category-wise reports
+
+                    const categoryElements = {
+                        "Public Safety": '.category-public-safety',
+                        "Infrastructure": '.category-infrastructure',
+                        "Environmental Issues": '.category-environmental',
+                        "Crime and Law": '.category-crime-law',
+                        "Transportation": '.category-transportation',
+                        "Emergency Services": '.category-emergency-services',
+                        "Utilities": '.category-utilities',
+                        "Others": '.category-others'
+                    };
+
+                    data.categoryReports.forEach(category => {
+                        console.log('Processing category:', category.category_name); // Debugging line
+
+                        // Check if the category exists in the categoryElements object
+                        if (categoryElements[category.category_name]) {
+                            // Set the text content of the corresponding category element
+                            document.querySelector(categoryElements[category.category_name]).textContent = category.total;
+                        } else {
+                            console.log('No matching element for category:', category.category_name); // Debugging line
+                        }
+                    });
+
+
+                        
+                        
+
+                } catch (error) {
+                    console.error('Error fetching dashboard stats:', error);
+                }
+            }
+           async function assignWork() {
+                const reportId = document.getElementById('report-id').value.trim();
+                const staffId = document.getElementById('staff-id').value.trim();
+
+                console.log('Sending data:', { reportId, staffId });  // Log the request body to verify
+
+                if (!reportId || !staffId) {
+                    alert('Please enter both report ID and staff ID.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('http://localhost:4001/api/reports/assign', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ reportId, staffId }),  // Use camelCase keys here
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        alert('Work assigned successfully.');
+                    } else {
+                        console.error('Error response:', result);  // Log the response to check the backend error
+                        alert(`Error: ${result.error || 'An unknown error occurred'}`);
+                    }
+                } catch (error) {
+                    console.error('Error assigning work:', error);
+                    alert('An error occurred while assigning work.');
+                }
+            }
+
+
+            // Call fetchDashboardStats() when the page loads
+            window.addEventListener('DOMContentLoaded', fetchDashboardStats);
+
+       
     </script>
 </body>
 
